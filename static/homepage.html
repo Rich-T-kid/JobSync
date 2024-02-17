@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobSync - Discover Your Next Dream Job!</title>
+  <style>
+    /* Reset CSS */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      position: relative;
+      z-index: 1; /* Ensure header is above other content */
+    }
+
+    header h1 {
+      text-align: center;
+    }
+
+    .settings-icon, .profile-icon, .local-connections-icon {
+      position: absolute;
+      top: 20px;
+      color: #fff;
+    }
+
+    .settings-icon {
+      left: 20px;
+    }
+
+    .profile-icon {
+      left: 100px;
+    }
+
+    .local-connections-icon {
+      left: 180px;
+    }
+
+    .settings-icon a, .profile-icon a, .local-connections-icon a {
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .settings-icon a:hover, .profile-icon a:hover, .local-connections-icon a:hover {
+      color: #ffd700;
+    }
+
+    nav {
+      text-align: center;
+      padding-left: 260px; /* Adjust padding to make room for profile and local connections */
+    }
+
+    nav ul {
+      list-style: none;
+    }
+
+    nav ul li {
+      display: inline-block;
+      margin-left: 20px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      transition: color 0.3s ease;
+    }
+
+    nav ul li a.active {
+      color: #8d6e63; /* Chill brown for active tab */
+    }
+
+    nav ul li a:hover {
+      color: #ffd700;
+    }
+
+    .user-placeholder {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      background-color: #f4f4f4;
+      color: #333;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    .hero {
+      padding: 100px 0;
+      text-align: center;
+      position: relative;
+      z-index: 0; /* Ensure hero section is behind other content */
+    }
+
+    .hero h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      background-color: #ffd700;
+      color: #333;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #ffdb4d;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1; /* Ensure footer is above other content */
+    }
+
+    footer p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="settings-icon">
+      <a href="#"><i class="fa fa-cog" aria-hidden="true"></i> Settings</a>
+    </div>
+    <div class="profile-icon">
+      <a href="#"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
+    </div>
+    <div class="local-connections-icon">
+      <a href="#"><i class="fa fa-users" aria-hidden="true"></i> Local Connections</a>
+    </div>
+    <h1>JobSync</h1>
+    <nav>
+      <ul>
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Chill</a></li>
+        <li><a href="#">Jobs</a></li>
+      </ul>
+    </nav>
+    <!-- Placeholder for username -->
+    <div class="user-placeholder">PlaceholderUserName65</div>
+  </div>
+</header>
+
+<div class="container">
+  <section class="hero">
+    <div class="container">
+      <h2>Discover your next dream job in real-time!</h2>
+      <p>JobSync connects developers with employers, offering instant conversations to explore opportunities, discuss company cultures, and find the perfect fit. Join us and uncover exciting career paths and vibrant developer communities!</p>
+      <a href="#" class="btn">Get Started</a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2024 JobSync. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>
