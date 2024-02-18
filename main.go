@@ -2,6 +2,7 @@ package main
 
 import ("fmt"
 	"io"
+	"proj/DB"
 //	"os"
 //	"errors"
 	"net/http")
@@ -13,7 +14,9 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 
 
 func main(){
+	/*
 	http.HandleFunc("/" , getRoot)
+
 	fmt.Print("lets start")
 	server := http.ListenAndServe(":8080",nil)
 	if server != nil{
@@ -22,7 +25,11 @@ func main(){
 	}else{
 		fmt.Println("starting on port 8080" , server)
 		
-	}
-
+	}*/
+	db , err := DB.DBConnection()
+	if err != nil{
+		fmt.Println(err)}
+	fmt.Println("db Connection ->", db)
+	DB.GrabData(db)
 	
 }
