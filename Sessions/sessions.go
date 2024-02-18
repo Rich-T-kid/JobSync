@@ -9,4 +9,6 @@ var (
 	store = sessions.NewCookieStore(key)
 )
 
+func GenerateSessionID(){
+}
  
