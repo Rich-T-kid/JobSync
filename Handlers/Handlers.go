@@ -3,14 +3,29 @@ import ("fmt"
 	"net/http"
 	"path/filepath"
 	"html/template"
-
+         "proj/DB"
 
 )
 
-func HomeHandler(w http.ResponseWriter,r *http.Request){
-	renderTemplate(w,"home.html",nil)
+func LoginHandler(w http.ResponseWriter,r *http.Request){
+	fmt.Println(r.Method, "at", r.URL.Path)
+	if r.Method == http.MethodGet{
+	renderTemplate(w,"Login.html",nil)}
 }
-
+	/* else{ //post request
+		err := r.ParseForm()
+		if err != nil{
+		http.Error(w,err.Error(),http.StatusInternalServerError)
+		return }
+	//Username := r.Form.Get("Username")
+	//Password := r.Form.Get("Password")
+	//if DB.ValidLogin(Username , Password){
+	// 	http.Redirect(w,"/homepage",http.StatusSeeOther) // add a intermediate redirect
+//}                                                              // that last like half a sec
+								// and then redirects to homepage
+	}
+}
+*/
 //ForgotConfirm.html  forgotPassword.html  home.html  homepage.html  Signup.html
 
 func ForgotHandler(w http.ResponseWriter, r *http.Request){
@@ -23,21 +38,35 @@ func ForgotPassHandler(w http.ResponseWriter, r *http.Request){
 func HomePageHandler(w http.ResponseWriter, r *http.Request){
 	renderTemplate(w,"homepage.html",nil)
 }
-func SignUpHandler(w http.ResponseWriter, r *http.Request){
-	if r.Method == "GET"{
-	renderTemplate(w,"Signup.html",nil)
-	}else{
-		err := r.ParseForm()
-		if err != nil{
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return		}
-	email := r.Form.Get("email")
-	username := r.Form.Get("Username")
-	password := r.Form.Get("psw")
-	passwordr := r.Form.Get("psw-repeat")
-	PhoneNumber := r.Form.Get("PhoneNumber")
-	fmt.Fprint(w,email,username,password,passwordr,PhoneNumber)
-}}
+func SignUpHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method == "GET" {
+        // Render the signup form for GET requests
+        renderTemplate(w, "Signup.html", nil)
+    } else if r.Method == "POST" {
+        // Parse the form data
+        err := r.ParseForm()
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+
+        // Get form values
+        email := r.Form.Get("email")
+        username := r.Form.Get("Username")
+        password := r.Form.Get("psw")
+        phoneNumber := r.Form.Get("PhoneNumber")
+
+        // Insert the user into the database (assuming DB.InputUser is correct)
+        err = DB.InputUser(username, password, email, phoneNumber)
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+
+        // Redirect to the root URL after successful form submission
+       /// http.Redirect(w, r, "/", http.StatusSeeOther)
+    }
+}
 
 /*
 
