@@ -1,5 +1,6 @@
 package Handlers 
-import ("fmt"  
+import (//"time"
+	"fmt"  
 	"net/http"
 	"path/filepath"
 	"html/template"
@@ -7,26 +8,34 @@ import ("fmt"
 
 )
 
+
+
+
 func LoginHandler(w http.ResponseWriter,r *http.Request){
-	fmt.Println(r.Method, "at", r.URL.Path)
-	if r.Method == http.MethodGet{
-	renderTemplate(w,"Login.html",nil)}
-}
-	/* else{ //post request
+	if r.Method == "GET"{
+	renderTemplate(w,"Login.html",nil)
+	}else{ //post request
 		err := r.ParseForm()
 		if err != nil{
 		http.Error(w,err.Error(),http.StatusInternalServerError)
 		return }
-	//Username := r.Form.Get("Username")
-	//Password := r.Form.Get("Password")
-	//if DB.ValidLogin(Username , Password){
-	// 	http.Redirect(w,"/homepage",http.StatusSeeOther) // add a intermediate redirect
-//}                                                              // that last like half a sec
+	Username := r.Form.Get("Username")
+	Password := r.Form.Get("Password")
+	fmt.Println(Username,Password)
+	if DB.ValidLogin(Username , Password){
+		http.Redirect(w,r,"/homepage",http.StatusSeeOther)
+									 //	http.Redirect(w,"/homepage",http.StatusSeeOther) // add a intermediate redirect
+		}                                                              // that last like half a sec
 								// and then redirects to homepage
 	}
 }
+// dud. Work on getting this to work but not imporant.
+func WelcomeBackHandler(w http.ResponseWriter , r *http.Request){ // later on input the users name in here so it can be  passed to the template	
+	/*renderTemplate(w,"Welcomeback.html",nil) // pass in the users name later to be passed into the template here 
+	time.Sleep(2500 * time.Millisecond)
+	http.Redirect(w,r,"/homepage",http.StatusSeeOther)
 */
-//ForgotConfirm.html  forgotPassword.html  home.html  homepage.html  Signup.html
+}
 
 func ForgotHandler(w http.ResponseWriter, r *http.Request){
 	renderTemplate(w,"ForgotConfirm.html",nil)
@@ -64,19 +73,15 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
         }
 
         // Redirect to the root URL after successful form submission
-       /// http.Redirect(w, r, "/", http.StatusSeeOther)
+        http.Redirect(w, r, "/SignupConfirmation", http.StatusSeeOther)
     }
 }
 
-/*
+func SignupConfirmationHandler(w http.ResponseWriter , r *http.Request){
+	renderTemplate(w,"SignUpconfirmation.html",nil)
+}
 
-Need to implement ogic to store user in database (autheticfication can come after)
-write function to store user in the DB package and use here 
-then after that validdation and adding user to db we can send them to the home page
-work on assigning cookies after as well with the autheticaationa dn identifyation of users 
-
-*/
-//func LogHandler(w http.ResponseWriter, r *http.Request){}
+func LogHandler(w http.ResponseWriter, r *http.Request){}
 
 
 

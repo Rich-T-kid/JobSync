@@ -29,8 +29,7 @@ func CurrentTime() time.Time{
 func IsDBCOnnectionstillAlive() bool{
 	err := db.Ping()
 	if err != nil{
-	return false
-	}
+		return false }
 	return true
 }
 
@@ -43,10 +42,14 @@ func InputUser(Username , password , Email string,Phone_number interface{}) erro
 	_, err := db.Exec(formatedQuery)
 	return  err
 }
-/*
 func GenerateHash(password string) string {
 	return "not implemented currently"
 }
+
+func ValidLogin(username string , password string) bool {
+	return true
+}
+/*
 func InputSession() error {}
 
 func ValidPassword() bool {}
@@ -57,7 +60,6 @@ func UsernameExist() bool{}
 
 
 
-func ValidLogin(username string , password String) bool {}
 */
 
 /*
