@@ -6,20 +6,7 @@ import (
 //	"strconv"
 )
 
-//var users []User
-type User struct{
-	Name string
-	Password interface{}
-	Email string
-	PhoneNumber string
-}
 
-type Session struct{
-	SessionID string 
-	UserID int 
-	CreatedAt time.Time
-	ExpiresAt time.Time
-}
 
 func CurrentTime() time.Time{
 	return time.Now()
@@ -43,7 +30,7 @@ func InputUser(Username , password , Email string,Phone_number interface{}) erro
 	return  err
 }
 func GenerateHash(password string) string {
-	return "not implemented currently"
+	return "tempPassword"
 }
 
 func ValidLogin(username string , password string) bool {

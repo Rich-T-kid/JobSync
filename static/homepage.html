@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JobSync - Discover Your Next Dream Job!</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
     /* Reset CSS */
     * {
@@ -54,13 +55,13 @@
       left: 180px;
     }
 
-    .settings-icon a, .profile-icon a, .local-connections-icon a {
+    .settings-icon a, .profile-icon a, .local-connections-icon a, .logout-icon a {
       color: #fff;
       text-decoration: none;
       transition: color 0.3s ease;
     }
 
-    .settings-icon a:hover, .profile-icon a:hover, .local-connections-icon a:hover {
+    .settings-icon a:hover, .profile-icon a:hover, .local-connections-icon a:hover, .logout-icon a:hover {
       color: #ffd700;
     }
 
@@ -153,6 +154,11 @@
 
 <header>
   <div class="container">
+    <!-- Logout button -->
+    <div class="logout-icon" style="right: 20px;">
+      <a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+    </div>
+    <!-- Other icons and navigation -->
     <div class="settings-icon">
       <a href="#"><i class="fa fa-cog" aria-hidden="true"></i> Settings</a>
     </div>
