@@ -1,39 +1,19 @@
-first things first.
-Get the login page up and running as well as the 5 other templates
-make sure that the are able to be seen at the correct endpoints 
-configure a routing folder that will handle all the routing in the application so that things dont become crazy
+Handle Storing user into Database from sign up
+THen handle checking if user exist in database. If so send to login in page. Otherwise tell them user doesnt exist
 
-Second:
-configure all the buttons to work properly. Each button should send a post request or a get request to the backend so that tthe server can move along
-make sure that this is done properly.
+Wrap middleware around all endpoints exept for  "/login" to authentic that a user is signed in
 
+Dont need to acutally store user sessions in databse. Atleast not now
+set a permission cookies as well this will be a struct of valid user persmisions. Well need this later when navigating the site
 
 Third:
 have the login actaully be validated
 have the sign up be validated (for now this can be basic)
 generate a way to hash passwords
 
-
-fourth:
-make it so that by signing up and after validation they user is added to the Database sot hey are able to login in 
-then reroute them to the login in page.
-Handle the authetification of just checking that a username and hashedpassword exist in the database
-if so send them to the home page. else
-return an error template and 404 or 403 error
-
-
-fith:
-set up user session. 
-Configure database schema to set this up
-start with a small tests that uses hash table just as a small prototype
 To make sure that it works make a dummy endpoint and just make it show users at that endpoint during a session
 
-6th:
-store session in database 
-set up a way to check if session are expired and then erease them from DB
 
 Conlc:
-by end of the week have a control flow where login and sign up is set up and users can login and sign up
-once a user is signed up they will be able to login
 loging in will return a response contaiing a session cookie that will keep the user logged in and allow us to track them through the cookie
 once cookie expires and user tries to go to a part of the application that need authenfication it will tell them to sign in again(so far)

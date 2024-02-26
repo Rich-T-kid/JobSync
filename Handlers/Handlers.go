@@ -26,6 +26,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Username := r.Form.Get("Username")
 		Password := r.Form.Get("Password")
 		if DB.ValidLogin(Username, Password) {
+			Temp := DB.User{ Name: Username, Password: Password,}
+			fmt.Println(Temp)
+			DB.UserSlice = append(DB.UserSlice , Temp)
 			cookie := Sessions.CreateSessionCookie(Username,Password)
 			http.SetCookie(w,cookie)
 
@@ -67,11 +70,17 @@ func LogOutHandler(w http.ResponseWriter , r *http.Request){
 }
 // dud. Work on getting this to work but not imporant.
 func WelcomeBackHandler(w http.ResponseWriter , r *http.Request){ // later on input the users name in here so it can be  passed to the template	
-	/*renderTemplate(w,"Welcomeback.html",nil) // pass in the users name later to be passed into the template here 
-	time.Sleep(2500 * time.Millisecond)
-	http.Redirect(w,r,"/homepage",http.StatusSeeOther)
-*/
 }
+
+func ActiveHandler(w http.ResponseWriter , r *http.Request){
+	switch r.Method{
+		case "GET":
+			fmt.Println(DB.UserSlice)
+			renderTemplate(w,"ActiveSesion.html",DB.UserSlice)
+		default:
+			http.Error(w,"Method not allowed " , http.StatusMethodNotAllowed)
+	}}
+
 
 func ForgotHandler(w http.ResponseWriter, r *http.Request){
 	switch r.Method{

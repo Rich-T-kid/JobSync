@@ -3,12 +3,13 @@ package DB
 import ("time")
 
 
-var users []User
+var UserSlice []User
 type User struct{
 	Name string
 	Password interface{}
-	Email string
+	/*Email string
 	PhoneNumber string
+	*/
 }
 
 type Session struct{

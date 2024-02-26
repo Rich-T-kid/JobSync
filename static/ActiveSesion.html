@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="5"> <!-- Refresh the page every 5 seconds -->
+    <title>User List</title>
+</head>
+<body>
+    <h1>User List</h1>
+    <ul>
+        {{range .}}
+        <li>{{.Name}}</li>
+        {{end}}
+    </ul>
+</body>
+</html>
