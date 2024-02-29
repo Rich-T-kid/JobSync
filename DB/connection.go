@@ -35,6 +35,7 @@ func createDBconnection() (*sql.DB, error) {
     }
     return db, nil
 }
+/*
 type human struct{
 	id int
 	job string
@@ -54,3 +55,4 @@ func GrabData(db *sql.DB) {
 		fmt.Println(person)
 	}
 }}
+*/

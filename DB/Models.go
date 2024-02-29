@@ -7,6 +7,7 @@ var UserSlice []User
 type User struct{
 	Name string
 	Password interface{}
+	SessID  string
 	/*Email string
 	PhoneNumber string
 	*/
@@ -18,3 +19,9 @@ type Session struct{
 	CreatedAt time.Time
 	ExpiresAt time.Time
 }
+
+func RemoveUserSessionSlice(Usid string) {
+    for idx, user := range UserSlice {
+        if user.SessID == Usid {
+            UserSlice = append(UserSlice[:idx], UserSlice[idx+1:]...)
+}}}

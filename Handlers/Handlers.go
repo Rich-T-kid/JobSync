@@ -6,7 +6,7 @@ import ("time"
 	"html/template"
          "proj/DB"
 	 "proj/Sessions"
-
+	"proj/Emails"
 )
 
 
@@ -26,10 +26,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Username := r.Form.Get("Username")
 		Password := r.Form.Get("Password")
 		if DB.ValidLogin(Username, Password) {
-			Temp := DB.User{ Name: Username, Password: Password,}
-			fmt.Println(Temp)
-			DB.UserSlice = append(DB.UserSlice , Temp)
 			cookie := Sessions.CreateSessionCookie(Username,Password)
+			Temp := DB.User{ Name: Username, Password: Password,SessID :  cookie.Value,}
+			DB.UserSlice = append(DB.UserSlice , Temp)
+			fmt.Println(DB.UserSlice)
 			http.SetCookie(w,cookie)
 
 			http.Redirect(w, r, "/homepage", http.StatusSeeOther)
@@ -53,7 +53,7 @@ func LogOutHandler(w http.ResponseWriter , r *http.Request){
             		return 	}
         	http.Error(w, err.Error(), http.StatusInternalServerError)
         		return   }  
-   	 	// If the cookie is found, render the logout page
+   	 	// If the cookie is found, render the logout page and removefrom the current
    		renderTemplate(w, "LogOut.html", nil)
 		
 	case "POST":
@@ -63,6 +63,7 @@ func LogOutHandler(w http.ResponseWriter , r *http.Request){
 		}
 		SessionCookie.Expires = time.Now().AddDate(0,0,-1)
 		http.SetCookie(w,SessionCookie)
+		DB.RemoveUserSessionSlice(SessionCookie.Value)
 		http.Redirect(w,r,"/",http.StatusSeeOther)
 	default:
 		http.Error(w,"Method not allowed",http.StatusMethodNotAllowed)
@@ -127,11 +128,19 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 		// Insert the user into the database (assuming DB.InputUser is correct)
 		err = DB.InputUser(username, password, email, phoneNumber)
 		if err != nil {
+			if err.Error() == "User already exists" {
+    			 http.Error(w, "Username  already exists.Try using a different Username", http.StatusConflict)
+       			 return
+    			}
 			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		// Redirect to the root URL after successful form submission
+			return}
+	// takes up api calls. Already confirmed that we can properly send emails so im graying this out for now.	
+		// Need a way to validate that its a real email being passed.
+		status, err :=  Emails.SendEmail(username,email,Emails.GenericTemplate,Emails.GenerticHtmlTemplate)
+		if err != nil{
+			Emails.ReportError(status,err)}
+	Emails.ReportSuccess(email,r.URL.Path)
+		// Redirect to the root URL after successful form submission and sending email
 		http.Redirect(w, r, "/SignupConfirmation", http.StatusSeeOther)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
