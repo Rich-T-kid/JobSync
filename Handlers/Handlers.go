@@ -9,7 +9,9 @@ import ("time"
 	"proj/Emails"
 )
 
-
+const (
+	Logfpath = "../JobSyncLogs.txt" 
+)
 
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -45,6 +47,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 func LogOutHandler(w http.ResponseWriter , r *http.Request){
 	switch r.Method{
 	case "GET":
+		// can remove thsi code after i finish the AUTh middleware
 		_ , err := r.Cookie("SessionID")
     		if err != nil {
         		// If the error is due to the cookie missing, inform the user
@@ -64,6 +67,8 @@ func LogOutHandler(w http.ResponseWriter , r *http.Request){
 		SessionCookie.Expires = time.Now().AddDate(0,0,-1)
 		http.SetCookie(w,SessionCookie)
 		DB.RemoveUserSessionSlice(SessionCookie.Value)
+		// remove the session from the database
+		//DB.RemoveSesion(SessionCookie.Value)
 		http.Redirect(w,r,"/",http.StatusSeeOther)
 	default:
 		http.Error(w,"Method not allowed",http.StatusMethodNotAllowed)
@@ -152,10 +157,24 @@ func SignupConfirmationHandler(w http.ResponseWriter , r *http.Request){
 	renderTemplate(w,"SignUpconfirmation.html",nil)
 }
 
-func LogHandler(w http.ResponseWriter, r *http.Request){}
+func LogHandler(w http.ResponseWriter, r *http.Request){
+	data , err := DB.TopLogs()	
+	fmt.Println(data,err)
+	if err != nil{
+	fmt.Fprint(w,"Error had occured loading Logs")	
+	return 
+	}
+	DataBytes  := []byte(data)
+	_ , err = w.Write(DataBytes)
+	if err != nil{
+	http.Error(w, "Error Occured",http.StatusInternalServerError)
+	}
+}
 
 
-
+func InvalidCredentials(w http.ResponseWriter , r *http.Request){
+	renderTemplate(w,"InvalidCred.html",nil)
+}
 
 
 func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) { // this is for static html page rendering. 
@@ -178,3 +197,4 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) { // t
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
+
