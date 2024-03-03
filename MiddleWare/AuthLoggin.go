@@ -9,18 +9,19 @@ grab the user from their cookie and make a AuthHead that will be the users actau
 */
 func AuthMiddleWare(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        if r.URL.Path == "/" {
-            return
-        } else {
-            _ , err := r.Cookie("SessionID")
-            if err != nil { // invalid session cookie
-                http.Redirect(w, r, "/", http.StatusSeeOther)
-                return
-            } else {
-                // otherwise allow request to all other endpoints if there is a valid session id
+        _, err := r.Cookie("SessionID")
+        if err != nil { // If session ID is expired or doesn't exist, redirect to "/InvalidCred"
+            switch r.URL.Path {
+            case "/", "/signup":
+                // Valid cookie session or access to the login page, allow the request to proceed
                 next.ServeHTTP(w, r)
+            default:
+                http.Redirect(w, r, "/InvalidCred", http.StatusSeeOther)
+                return
             }
+        } else {
+            // Valid cookie session or access to the login page, allow the request to proceed
+            next.ServeHTTP(w, r)
         }
     })
 }
-

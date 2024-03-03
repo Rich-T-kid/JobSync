@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
   body {
-    background-color: #90b88e; /* Light beige-blue color */
+    background-color: #171c24; /* Dark background */
     font-family: 'Lato', sans-serif;
     display: flex;
     justify-content: center;
@@ -17,17 +17,48 @@
     height: 100vh;
   }
   .login-wrap {
-    background-color: #fff; /* White background */
-    padding: 40px;
+    background-color: #171c24; /* Dark background */
+    padding: 80px; /* Increased padding */
     border-radius: 10px;
+    border: 4px solid #6B46C1; /* Dark purple border */
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Box shadow */
   }
   .heading-section {
-    font-size: 36px; /* Increase heading font size */
-    color: #333; /* Dark text color */
+    font-size: 48px; /* Increased heading font size */
+    color: #fff; /* White text color */
+    margin-bottom: 30px; /* Increased margin bottom */
   }
   .login-form {
-    font-size: 18px; /* Increase form font size */
+    font-size: 24px; /* Increased form font size */
+    color: #fff; /* White text color */
+  }
+  .form-control {
+    background-color: #2d3748; /* Darker background for input fields */
+    color: #fff; /* White text color for input fields */
+    border-color: #4a5568; /* Border color for input fields */
+    font-size: 20px; /* Increased font size for input fields */
+    padding: 12px; /* Increased padding for input fields */
+  }
+  .btn-primary {
+    background-color: #3182ce; /* Blue button background color */
+    color: #fff; /* White text color for button */
+    border: none; /* No border */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; /* Cursor */
+    transition: background-color 0.3s ease; /* Transition effect */
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Box sizing */
+    font-size: 24px; /* Increased font size for button */
+    padding: 15px; /* Increased padding for button */
+  }
+  .text a {
+    color: #a0aec0; /* Light gray color for links */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease; /* Transition effect */
+    font-size: 20px; /* Increased font size for links */
+  }
+  .text a:hover {
+    color: #cbd5e0; /* Lighter gray color for links on hover */
   }
 </style>
 </head>
@@ -35,16 +66,16 @@
 <section class="ftco-section">
 <div class="container">
 <div class="row justify-content-center">
-<div class="col-md-6 text-center mb-5">
+<div class="col-md-8 text-center mb-5"> <!-- Increased column width -->
 <h2 class="heading-section">Welcome to your future</h2>
 </div>
 </div>
 <div class="row justify-content-center">
-<div class="col-md-6 col-lg-4 text-center"> <!-- Centering text -->
+<div class="col-md-8 col-lg-6 text-center"> <!-- Increased column width -->
 <div class="login-wrap py-5">
 <div class="img d-flex align-items-center justify-content-center" style="background-image: url(images/bg.jpg);"></div>
-<h3 class="mb-0">Workplace tinder</h3>
-<p>Sign in by entering the information below</p>
+<h3 class="mb-4" style="font-size: 32px;">Workplace tinder</h3> <!-- Increased font size -->
+<p class="text mb-4" style="font-size: 28px;">Sign in by entering the information below</p> <!-- Increased font size -->
 <form action="/" method= "POST" class="login-form">
 <div class="form-group">
 <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-user"></span></div>
@@ -56,7 +87,7 @@
 </div>
 <div class="form-group d-md-flex">
 <div class="w-100 text-md-right">
-<a href="https://localhost:9000/forgotpassword">Forgot Password</a>
+<a href="/forgotpassword">Forgot Password</a>
 </div>
 </div>
 <div class="form-group">
@@ -65,7 +96,7 @@
 </form>
 <div class="w-100 text-center mt-4 text">
 <p class="mb-0">Don't have an account?</p>
-<a href="http://localhost:9000/signup">Sign Up</a>
+<a href="/signup">Sign Up</a>
 </div>
 </div>
 </div>
@@ -74,3 +105,4 @@
 </section>
 </body>
 </html>
+```

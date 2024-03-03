@@ -5,7 +5,7 @@ import (
     "strings"
 )
 const (
-	logFilePath = "../JobSyncLogs.txt" 
+	logFilePath = "JobSyncLogs.txt" 
 )
 
 func TopLogs() (string,error){

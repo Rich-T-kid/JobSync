@@ -15,8 +15,9 @@
 
     /* Global Styles */
     body {
+      background-color: #171c24; /* Dark background */
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      color: #fff; /* White text color */
     }
 
     .container {
@@ -37,7 +38,7 @@
       text-align: center;
     }
 
-    .settings-icon, .profile-icon, .local-connections-icon {
+    .settings-icon, .profile-icon, .local-connections-icon, .logout-icon {
       position: absolute;
       top: 20px;
       color: #fff;
@@ -55,6 +56,10 @@
       left: 180px;
     }
 
+    .logout-icon {
+      right: 20px;
+    }
+
     .settings-icon a, .profile-icon a, .local-connections-icon a, .logout-icon a {
       color: #fff;
       text-decoration: none;
@@ -67,7 +72,6 @@
 
     nav {
       text-align: center;
-      padding-left: 260px; /* Adjust padding to make room for profile and local connections */
     }
 
     nav ul {
@@ -86,21 +90,11 @@
     }
 
     nav ul li a.active {
-      color: #8d6e63; /* Chill brown for active tab */
+      color: #ffd700; /* Yellow for active tab */
     }
 
     nav ul li a:hover {
       color: #ffd700;
-    }
-
-    .user-placeholder {
-      position: absolute;
-      top: 60px;
-      left: 20px;
-      background-color: #f4f4f4;
-      color: #333;
-      padding: 5px 10px;
-      border-radius: 5px;
     }
 
     .hero {
@@ -111,26 +105,26 @@
     }
 
     .hero h2 {
-      font-size: 36px;
+      font-size: 48px; /* Increased heading font size */
       margin-bottom: 20px;
     }
 
     .hero p {
-      font-size: 18px;
+      font-size: 24px; /* Increased paragraph font size */
       margin-bottom: 40px;
     }
 
     .btn {
       background-color: #ffd700;
       color: #333;
-      padding: 10px 20px;
+      padding: 15px 30px; /* Increased padding */
       text-decoration: none;
       border-radius: 5px;
       transition: background-color 0.3s ease;
     }
 
     .btn:hover {
-      background-color: #ffdb4d;
+      background-color: #ffdb4d; /* Lighter yellow on hover */
     }
 
     footer {
@@ -154,19 +148,21 @@
 
 <header>
   <div class="container">
-    <!-- Logout button -->
-    <div class="logout-icon" style="right: 20px;">
-      <a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
-    </div>
-    <!-- Other icons and navigation -->
+    <!-- Settings icon -->
     <div class="settings-icon">
       <a href="#"><i class="fa fa-cog" aria-hidden="true"></i> Settings</a>
     </div>
+    <!-- Profile icon -->
     <div class="profile-icon">
       <a href="#"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
     </div>
+    <!-- Local Connections icon -->
     <div class="local-connections-icon">
       <a href="#"><i class="fa fa-users" aria-hidden="true"></i> Local Connections</a>
+    </div>
+    <!-- Logout icon -->
+    <div class="logout-icon">
+      <a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
     </div>
     <h1>JobSync</h1>
     <nav>

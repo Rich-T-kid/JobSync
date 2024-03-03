@@ -6,7 +6,8 @@ import ("time"
 	"html/template"
          "proj/DB"
 	 "proj/Sessions"
-	"proj/Emails"
+//	"proj/Emails"
+
 )
 
 const (
@@ -141,10 +142,10 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 			return}
 	// takes up api calls. Already confirmed that we can properly send emails so im graying this out for now.	
 		// Need a way to validate that its a real email being passed.
-		status, err :=  Emails.SendEmail(username,email,Emails.GenericTemplate,Emails.GenerticHtmlTemplate)
-		if err != nil{
-			Emails.ReportError(status,err)}
-	Emails.ReportSuccess(email,r.URL.Path)
+	//	status, err :=  Emails.SendEmail(username,email,Emails.GenericTemplate,Emails.GenerticHtmlTemplate)
+	//	if err != nil{
+	//		Emails.ReportError(status,err)}
+//	Emails.ReportSuccess(email,r.URL.Path)
 		// Redirect to the root URL after successful form submission and sending email
 		http.Redirect(w, r, "/SignupConfirmation", http.StatusSeeOther)
 	default:
@@ -159,7 +160,6 @@ func SignupConfirmationHandler(w http.ResponseWriter , r *http.Request){
 
 func LogHandler(w http.ResponseWriter, r *http.Request){
 	data , err := DB.TopLogs()	
-	fmt.Println(data,err)
 	if err != nil{
 	fmt.Fprint(w,"Error had occured loading Logs")	
 	return 
