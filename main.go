@@ -17,7 +17,7 @@ func main(){
 	fmt.Println("running server on local host 9000")
 
 
-	server := http.ListenAndServe(":9000", MiddleWare.LogRequest(MiddleWare.AuthMiddleWare(Router)))
+	server := http.ListenAndServe(":9000",MiddleWare.StandardHeaders(MiddleWare.LogRequest(MiddleWare.AuthMiddleWare(Router))))
 	if server != nil{
 		fmt.Println("error :" , server)
 	}
