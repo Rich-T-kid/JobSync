@@ -15,6 +15,9 @@ func SetUpRouter() *mux.Router{ //this should be called in main package
 	Router.HandleFunc("/confiration",Handlers.ForgotHandler)
 	Router.HandleFunc("/SignupConfirmation",Handlers.SignupConfirmationHandler).Methods("GET")
 	Router.HandleFunc("/welcomeback",Handlers.WelcomeBackHandler).Methods("GET")
+	Router.HandleFunc("/Active",Handlers.ActiveHandler).Methods("GET")
+	Router.HandleFunc("/InvalidCred",Handlers.InvalidCredentials).Methods("GET")
+	Router.HandleFunc("/Logs",Handlers.LogHandler).Methods("GET")
 	return Router
 
 }

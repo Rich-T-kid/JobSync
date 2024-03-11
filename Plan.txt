@@ -1,39 +1,21 @@
-first things first.
-Get the login page up and running as well as the 5 other templates
-make sure that the are able to be seen at the correct endpoints 
-configure a routing folder that will handle all the routing in the application so that things dont become crazy
+set a permission cookies as well this will be a struct of valid user persmisions. Well need this later when navigating the site
 
-Second:
-configure all the buttons to work properly. Each button should send a post request or a get request to the backend so that tthe server can move along
-make sure that this is done properly.
+ave the sign up be validated (for now this can be basic)
 
 
-Third:
-have the login actaully be validated
-have the sign up be validated (for now this can be basic)
-generate a way to hash passwords
+remove the uneeed Auth from the Logout Handler
+Implement the neccarscry functions for the datbase
+	hashing password and then placing it in Datbase
+	Implement checking if username and ahshed password exist in users Table
+		Then use this method in the Login Handler
+		Should be using a real Authenticated Login this week along with dummy login for each of us which will 1 username and 1 password
+	Revamp the Homepage Handler html so that on the left is has a column where we can plug in data
+	Also need to set up Sessions table in Database to manage User Sessiona nd the data connectioned to a user better 
 
+	Mess aroudn with how your going to structrue the Forgotpassword stuff. We have the mail tempalte and stuff but might not be worth energy
 
-fourth:
-make it so that by signing up and after validation they user is added to the Database sot hey are able to login in 
-then reroute them to the login in page.
-Handle the authetification of just checking that a username and hashedpassword exist in the database
-if so send them to the home page. else
-return an error template and 404 or 403 error
+	Will probly need other cookie like / UserPrefences , Autheentification (What persmission Users Have) ,UserLocation ,later On Implement "Remember Me" button so no need fo rrepeated login
+	Build out all the schemes well need for the chat application side of Things.
+	Buid the basics of just the endpoints and what theyll display 
+	in Golang code focus on how were going to Get Jobs board info as well as how well display this to the user.
 
-
-fith:
-set up user session. 
-Configure database schema to set this up
-start with a small tests that uses hash table just as a small prototype
-To make sure that it works make a dummy endpoint and just make it show users at that endpoint during a session
-
-6th:
-store session in database 
-set up a way to check if session are expired and then erease them from DB
-
-Conlc:
-by end of the week have a control flow where login and sign up is set up and users can login and sign up
-once a user is signed up they will be able to login
-loging in will return a response contaiing a session cookie that will keep the user logged in and allow us to track them through the cookie
-once cookie expires and user tries to go to a part of the application that need authenfication it will tell them to sign in again(so far)

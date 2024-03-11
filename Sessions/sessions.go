@@ -16,7 +16,7 @@ func generateSessionID() string {
 	return uuid.NewString()
 
 }
-func formatedTime() string{
+func FormatedTime() string{
 
 	currentTime := time.Now()
 

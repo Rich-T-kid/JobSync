@@ -3,12 +3,14 @@ package DB
 import ("time")
 
 
-var users []User
+var UserSlice []User
 type User struct{
 	Name string
 	Password interface{}
-	Email string
+	SessID  string
+	/*Email string
 	PhoneNumber string
+	*/
 }
 
 type Session struct{
@@ -17,3 +19,9 @@ type Session struct{
 	CreatedAt time.Time
 	ExpiresAt time.Time
 }
+
+func RemoveUserSessionSlice(Usid string) {
+    for idx, user := range UserSlice {
+        if user.SessID == Usid {
+            UserSlice = append(UserSlice[:idx], UserSlice[idx+1:]...)
+}}}
