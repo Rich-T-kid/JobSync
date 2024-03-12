@@ -19,3 +19,4 @@ Implement the neccarscry functions for the datbase
 	Buid the basics of just the endpoints and what theyll display 
 	in Golang code focus on how were going to Get Jobs board info as well as how well display this to the user.
 
+by wendnesday night deploy to anywhere just to see.

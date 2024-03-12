@@ -15,7 +15,7 @@ func AuthMiddleWare(next http.Handler) http.Handler {
         _, err := r.Cookie("SessionID")
         if err != nil { // If session ID is expired or doesn't exist, redirect to "/InvalidCred"
             switch r.URL.Path {
-            case "/", "/signup":
+            case "/", "/signup", "/InvalidCredentials":
                 // Valid cookie session or access to the login page, allow the request to proceed
                 next.ServeHTTP(w, r)
             default:
