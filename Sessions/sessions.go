@@ -45,4 +45,15 @@ func CreateSessionCookie(username string, password string) *http.Cookie {
 	
 }
 	
+func CreateNameCookie(DBUserName string) *http.Cookie {
+	cookie := http.Cookie{
+		Name:     "UserNameCookie",
+		Value:    DBUserName,
+		Path:     "/",
+		MaxAge:   3600,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+    }
+	return &cookie
+}
 

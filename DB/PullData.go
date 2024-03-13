@@ -2,13 +2,16 @@ package DB
 
 import (
 	"fmt"
-	"hash/fnv"
+	"crypto/sha256"
+    	//"encoding/hex"
+//	"strings"
+
 	"time"
 //	"strconv"
 )
 var (
 
-	hashObject  = fnv.New128a() 
+	hashObject = sha256.New()
 )
 
 
@@ -39,37 +42,50 @@ func InputUser(Username , password , Email string,Phone_number interface{}) erro
     	if count > 0 {
         	return fmt.Errorf("User already exists")
     	}
-	//all the hashing will be done internally no need to call it from handlers
 	password = GenerateHash(password)
 	formatedQuery := fmt.Sprintf("insert into Users(Username,PasswordHash,Email,Phone_number) values (\"%s\",\"%s\",\"%s\",\"%s\")", Username, password, Email, Phone_number)
 	_, er := db.Exec(formatedQuery)
 	return  er
 }
+/*
 func GenerateHash(password string) string {
+	password = strings.TrimSpace(password)
 	hashObject.Write([]byte(password))
 	hashedBytes := hashObject.Sum(nil)
-	hashedString  := fmt.Sprintf("%x" , hashedBytes)
-	return hashedString	
+	//hashedString  := fmt.Sprintf("%x" , hashedBytes)
+	//fmt.Println("produced string" , hashedString)
+	//return hashedString	
+	fmt.Println("password: ", password , "Generated hash: " , hex.EncodeToString(hashedBytes))
+	return hex.EncodeToString(hashedBytes)
 }
-func RealLogin(username , password string) (bool ,error)  {
+*/
+func GenerateHash(password string) string{
+	return password}
+
+func RealLogin(username , password string)  (string , error)  {
 	db , err := DBConnection()
 	if err != nil{
-		return false ,fmt.Errorf("Database Connection down")
+		return "", fmt.Errorf("Database Connection down")
 	}
+	fmt.Println("pre password db will check" , password)
 	password = GenerateHash(password) // convert to hash to check in DB
 	query := "SELECT * FROM Users WHERE Username = ? AND PasswordHash = ?"
+	fmt.Println("hashed passwrrd db will check " , password)
 	row , err := db.Query(query , username , password)
 	if err != nil{
-		return false , err
+		return "", err
 	}
 	rowcount := 0
-	for row.Next(){
-	rowcount++ 
-	}
+	var DbEntry UserDB
+	for row.Next() {
+		err := row.Scan(&DbEntry.UserID, &DbEntry.Username , &DbEntry.password, &DbEntry.email, &DbEntry.phone)
+		if err != nil{
+		return "", err}
+		rowcount++ }
 	if rowcount == 0{
-	return false, fmt.Errorf("User Doesn't Exist")
+	return "", fmt.Errorf("User Doesn't Exist")
 	}
-	return true , nil
+	return  DbEntry.Username, nil
 }
 func ValidLogin(username string , password string) bool {
 	return true

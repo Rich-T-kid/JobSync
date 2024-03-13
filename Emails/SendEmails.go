@@ -23,32 +23,34 @@ func SendEmail(Username, UserGmail, plaintext, html string) (int, error) {
     client := sendgrid.NewSendClient(APiKey)
     response, err := client.Send(message)
     if err != nil {
+	    reportError(response.StatusCode,err)
         return response.StatusCode, err
     } else {
+	    reportSuccess(UserGmail)
         return response.StatusCode, nil
     }
 }
 
-func ReportError(status int ,er error ) error {
+func reportError(status int ,er error ) error {
     f, err := os.OpenFile("EmailErrorLogs.txt", os.O_APPEND|os.O_WRONLY, 0644)
     if err != nil{
     	return err} 
     defer f.Close() // Ensure file is closed after use
-
+    currentTime := Sessions.FormatedTime()
     // Write data to the file
-    _, err = fmt.Fprint(f, status,er)
+    _, err = fmt.Fprint(f, "Error occurred sending email at ", currentTime, " with the status code of ", status, " and error of ", er)
     if err !=nil{
 	    return err}
     return nil // Return nil if the operation is successful
 }
 
-func ReportSuccess(email  , path string ) error {
+func reportSuccess(email string ) error {
     f, err := os.OpenFile("SuccessEmailLog.txt", os.O_APPEND|os.O_WRONLY, 0644)
     if err != nil{
     	return err} 
     defer f.Close() // Ensure file is closed after use
     currentTime := Sessions.FormatedTime()
-    message := fmt.Sprintf("Sent email to %s at %s at this time %s\n", email, path, currentTime)
+    message := fmt.Sprintf("Sent email to %s at %s at this time %s\n", email, currentTime, currentTime)
     // Write data to the file
     _, err = fmt.Fprint(f,message)
     if err !=nil{
@@ -60,10 +62,4 @@ func FakeSendEmail(Username, UserGmail, plaintext, html string) (int, error) {
 	fmt.Println("JUst Sent Email. Not fr tho dont want to waste API REquest. Line 60/Emails")	
 	return 0,nil
 }
-/*
-func main() {
-    fmt.Println("starting")
-    statuscode, err := SendEmail("Richard", "rbb98@scarletmail.rutgers.edu", GenericTemplate, GenerticHtmlTemplate)
-    fmt.Println(statuscode, err)
-    fmt.Println("ending here ")
-}*/
+

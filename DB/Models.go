@@ -13,6 +13,15 @@ type User struct{
 	*/
 }
 
+type UserDB struct{
+UserID int
+Username string
+password string
+email string
+phone string
+
+}
+
 type Session struct{
 	SessionID string 
 	UserID int 
@@ -25,3 +34,5 @@ func RemoveUserSessionSlice(Usid string) {
         if user.SessID == Usid {
             UserSlice = append(UserSlice[:idx], UserSlice[idx+1:]...)
 }}}
+
+

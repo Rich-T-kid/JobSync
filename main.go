@@ -1,24 +1,27 @@
 package main
 
-import ("fmt"
+import (
+	"fmt"
+	"log"
 	"proj/MiddleWare"
-//	"io"
-//	"proj/DB"
+
 	"proj/Routing"
-//	"os"
-//	"errors"
-	"net/http")
+	"net/http"
+)
+
+var chain http.Handler
+
+func init(){
+	Router := Routing.StartAllRouters()
+	chain = MiddleWare.New(MiddleWare.LogRequest , MiddleWare.StandardHeaders).Then(Router)
+	fmt.Print("Set Up Routers and middlware")
+}
 
 
 func main(){
 
-	Router := Routing.SetUpRouter()
-
 	fmt.Println("running server on local host 9000")
 
-
-	server := http.ListenAndServe(":9000",MiddleWare.StandardHeaders(MiddleWare.LogRequest(MiddleWare.AuthMiddleWare(Router))))
-	if server != nil{
-		fmt.Println("error :" , server)
-	}
+	log.Fatal(http.ListenAndServe(":9000",chain))
+	
 }
