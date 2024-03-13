@@ -27,3 +27,4 @@ func TopLogs() (string,error){
     response := strings.Join(top50, "\n")	
     return response , nil
 }
+

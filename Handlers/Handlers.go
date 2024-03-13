@@ -28,7 +28,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		Username := r.Form.Get("Username")
 		Password := r.Form.Get("Password")
-		fmt.Println(" Password" , Password)
 		DBUserName, Response := DB.RealLogin(Username,Password)
 		fmt.Println(DBUserName,Response)
 		if Response  != nil  {
@@ -70,10 +69,8 @@ func LogOutHandler(w http.ResponseWriter , r *http.Request){
 		http.Error(w,"Method not allowed",http.StatusMethodNotAllowed)
 	}
 }
-// dud. Work on getting this to work but not imporant.
-func WelcomeBackHandler(w http.ResponseWriter , r *http.Request){ // later on input the users name in here so it can be  passed to the template	
-}
-
+// move this to its ownfile once finished setting up the routers and subrouters. 
+// figure out how youll model user prefrences with cookies and perist this to the databse
 func ActiveHandler(w http.ResponseWriter , r *http.Request){
 	switch r.Method{
 		case "GET":
@@ -103,14 +100,14 @@ func HomePageHandler(w http.ResponseWriter, r *http.Request){
 	case "GET":
 		UserNameCookie , err := r.Cookie("UserNameCookie")
 		if err != nil{
-		fmt.Print(err)
+			fmt.Print(err)
 		return }
 		username := UserNameCookie.Value
 		data := struct {
         	Username string
    	 	}{
         	Username: username,}
-			
+		fmt.Println(data , data.Username)		
 		renderTemplate(w,"homepage.html",data)
 	default:
 		http.Error(w,"Method notallowed" , http.StatusMethodNotAllowed)
@@ -187,7 +184,6 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) { // t
 	if err != nil{
 	
 	}
-	fmt.Println("abs statoc dir: ", absStaticDir)
 
 	tmplPath := filepath.Join(absStaticDir,tmpl)
 	t, err := template.ParseFiles(tmplPath)
@@ -195,6 +191,7 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) { // t
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	fmt.Println(data)
 	err = t.Execute(w, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

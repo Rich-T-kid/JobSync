@@ -2,14 +2,16 @@ package DB
 
 import (
 	"fmt"
-	"strings"
-	"hash/fnv"
+	"crypto/sha256"
+    	//"encoding/hex"
+//	"strings"
+
 	"time"
 //	"strconv"
 )
 var (
 
-	hashObject  = fnv.New128a() 
+	hashObject = sha256.New()
 )
 
 
@@ -45,18 +47,21 @@ func InputUser(Username , password , Email string,Phone_number interface{}) erro
 	_, er := db.Exec(formatedQuery)
 	return  er
 }
+/*
 func GenerateHash(password string) string {
 	password = strings.TrimSpace(password)
-	fmt.Println("inputed hash" , password)
-	for _, char := range password {
-		fmt.Printf("%c\n", char)
-	}	
 	hashObject.Write([]byte(password))
 	hashedBytes := hashObject.Sum(nil)
-	hashedString  := fmt.Sprintf("%x" , hashedBytes)
-	fmt.Println("produced string" , hashedString)
-	return hashedString	
+	//hashedString  := fmt.Sprintf("%x" , hashedBytes)
+	//fmt.Println("produced string" , hashedString)
+	//return hashedString	
+	fmt.Println("password: ", password , "Generated hash: " , hex.EncodeToString(hashedBytes))
+	return hex.EncodeToString(hashedBytes)
 }
+*/
+func GenerateHash(password string) string{
+	return password}
+
 func RealLogin(username , password string)  (string , error)  {
 	db , err := DBConnection()
 	if err != nil{
