@@ -20,3 +20,43 @@ Implement the neccarscry functions for the datbase
 	in Golang code focus on how were going to Get Jobs board info as well as how well display this to the user.
 
 by wendnesday night deploy to anywhere just to see.
+
+Account Settings:
+
+Username
+Password
+Email address
+Profile picture
+Biography or About Me section
+Privacy Settings:
+
+Public profile visibility
+Who can send friend requests or follow requests
+Who can view posts, photos, or other content
+Who can send messages or chat requests
+Notification Settings:
+
+Email notifications (e.g., new messages, friend requests, comments)
+Push notifications (e.g., mobile app notifications for new activity)
+Frequency of notifications (e.g., instant, daily summary)
+Appearance Settings:
+
+Theme selection (e.g., light mode, dark mode)
+Font size
+Color scheme customization
+Background image or wallpaper
+Language and Region Settings:
+
+
+Content Preferences:
+
+Filter settings for content (e.g., age restrictions, content warnings)
+Notification Preferences:
+
+Preference for receiving promotional emails
+Opt-in or opt-out of marketing communications
+Data and Privacy:
+
+Data export or download options
+Data deletion or account closure requests
+Privacy policy and terms of service review
