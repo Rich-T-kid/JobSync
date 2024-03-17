@@ -29,7 +29,6 @@ func IsDBCOnnectionstillAlive() bool{
 
 // create a user in database for the first time
 func InputUser(Username , password , Email string,Phone_number interface{}) error{
-	fmt.Println("called")
 	db , err := DBConnection() // handle error later
 	if err != nil{
 		return err
@@ -68,9 +67,8 @@ func RealLogin(username , password string)  (string , error)  {
 		return "", fmt.Errorf("Database Connection down")
 	}
 	fmt.Println("pre password db will check" , password)
-	password = GenerateHash(password) // convert to hash to check in DB
-	query := "SELECT * FROM Users WHERE Username = ? AND PasswordHash = ?"
-	fmt.Println("hashed passwrrd db will check " , password)
+	password = GenerateHash(password) 
+	query := "SELECT username FROM Users WHERE Username = ? AND PasswordHash = ?"
 	row , err := db.Query(query , username , password)
 	if err != nil{
 		return "", err
@@ -78,7 +76,7 @@ func RealLogin(username , password string)  (string , error)  {
 	rowcount := 0
 	var DbEntry UserDB
 	for row.Next() {
-		err := row.Scan(&DbEntry.UserID, &DbEntry.Username , &DbEntry.password, &DbEntry.email, &DbEntry.phone)
+		err := row.Scan(&DbEntry.Username)
 		if err != nil{
 		return "", err}
 		rowcount++ }
