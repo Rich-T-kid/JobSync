@@ -69,5 +69,8 @@ func RemoveUserSessionSlice(Usid string) {
         if user.SessID == Usid {
             UserSlice = append(UserSlice[:idx], UserSlice[idx+1:]...)
 }}}
-
+type UserPermsions struct{
+	Userid int
+	Permissions []string
+}
 
