@@ -29,7 +29,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Username := r.Form.Get("Username")
 		Password := r.Form.Get("Password")
 		DBUserName, Response := DB.RealLogin(Username,Password)
-		fmt.Println(DBUserName,Response)
 		if Response  != nil  {
 				http.Error(w,"You must login fisrt", http.StatusUnauthorized)
 		}else{
@@ -37,7 +36,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			UserNameCookie := Sessions.CreateNameCookie(DBUserName)
 			Temp := DB.User{ Name: Username, Password: Password,SessID :  cookie.Value,}
 			DB.UserSlice = append(DB.UserSlice , Temp)
-			fmt.Println(DB.UserSlice)
+			if err := DB.StoreCookie(cookie,DBUserName); err != nil{
+				fmt.Fprintln(w,err)	
+			}
 			http.SetCookie(w,cookie)
 			http.SetCookie(w,UserNameCookie)
 			http.Redirect(w, r, "/homepage", http.StatusSeeOther)
@@ -63,7 +64,7 @@ func LogOutHandler(w http.ResponseWriter , r *http.Request){
 		http.SetCookie(w,SessionCookie)
 		DB.RemoveUserSessionSlice(SessionCookie.Value)
 		// remove the session from the database
-		//DB.RemoveSesion(SessionCookie.Value)
+		DB.DeleteCookieSession(SessionCookie)
 		http.Redirect(w,r,"/",http.StatusSeeOther)
 	default:
 		http.Error(w,"Method not allowed",http.StatusMethodNotAllowed)
@@ -175,7 +176,17 @@ func LogHandler(w http.ResponseWriter, r *http.Request){
 func InvalidCredentials(w http.ResponseWriter , r *http.Request){
 	renderTemplate(w,"InvalidCred.html",nil)
 }
+	
+func TestHandler (w http.ResponseWriter , r *http.Request){
+	data , err := DB.AllActiveUsers()
+	if err != nil{
+		fmt.Println(err)
+		return }
+	fmt.Println(data)
+	fmt.Fprint(w,data)
+	return
 
+}
 
 func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) { // this is for static html page rendering. 
 	staticDir := "static"
@@ -184,7 +195,6 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) { // t
 	if err != nil{
 	
 	}
-
 	tmplPath := filepath.Join(absStaticDir,tmpl)
 	t, err := template.ParseFiles(tmplPath)
 	if err != nil {

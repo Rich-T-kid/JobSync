@@ -41,14 +41,14 @@ func reportError(status int ,er error ) error {
     _, err = fmt.Fprint(f, "Error occurred sending email at ", currentTime, " with the status code of ", status, " and error of ", er)
     if err !=nil{
 	    return err}
-    return nil // Return nil if the operation is successful
+    return nil 
 }
 
 func reportSuccess(email string ) error {
     f, err := os.OpenFile("SuccessEmailLog.txt", os.O_APPEND|os.O_WRONLY, 0644)
     if err != nil{
     	return err} 
-    defer f.Close() // Ensure file is closed after use
+    defer f.Close() 
     currentTime := Sessions.FormatedTime()
     message := fmt.Sprintf("Sent email to %s at %s at this time %s\n", email, currentTime, currentTime)
     // Write data to the file

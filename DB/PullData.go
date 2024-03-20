@@ -34,30 +34,19 @@ func InputUser(Username , password , Email string,Phone_number interface{}) erro
 		return err
 	}
 	var count int
-    	err = db.QueryRow("SELECT COUNT(*) FROM Users WHERE Username = ?", Username).Scan(&count)
+    	err = db.QueryRow("SELECT COUNT(*) FROM users WHERE Username = ?", Username).Scan(&count)
     	if err != nil {
         	return err
     	}
     	if count > 0 {
         	return fmt.Errorf("User already exists")
     	}
+	// Validate.go Has a working has function include that here and in the valid login function
 	password = GenerateHash(password)
-	formatedQuery := fmt.Sprintf("insert into Users(Username,PasswordHash,Email,Phone_number) values (\"%s\",\"%s\",\"%s\",\"%s\")", Username, password, Email, Phone_number)
+	formatedQuery := fmt.Sprintf("insert into users(Username,password,Email,Phone_number) values (\"%s\",\"%s\",\"%s\",\"%s\")", Username, password, Email, Phone_number)
 	_, er := db.Exec(formatedQuery)
 	return  er
 }
-/*
-func GenerateHash(password string) string {
-	password = strings.TrimSpace(password)
-	hashObject.Write([]byte(password))
-	hashedBytes := hashObject.Sum(nil)
-	//hashedString  := fmt.Sprintf("%x" , hashedBytes)
-	//fmt.Println("produced string" , hashedString)
-	//return hashedString	
-	fmt.Println("password: ", password , "Generated hash: " , hex.EncodeToString(hashedBytes))
-	return hex.EncodeToString(hashedBytes)
-}
-*/
 func GenerateHash(password string) string{
 	return password}
 
@@ -66,9 +55,8 @@ func RealLogin(username , password string)  (string , error)  {
 	if err != nil{
 		return "", fmt.Errorf("Database Connection down")
 	}
-	fmt.Println("pre password db will check" , password)
 	password = GenerateHash(password) 
-	query := "SELECT username FROM Users WHERE Username = ? AND PasswordHash = ?"
+	query := "SELECT username FROM users WHERE Username = ? AND password = ?"
 	row , err := db.Query(query , username , password)
 	if err != nil{
 		return "", err
@@ -89,21 +77,3 @@ func ValidLogin(username string , password string) bool {
 	return true
 
 }
-/*
-func InputSession() error {}
- Might just handle this with some vanila java script and html validaton. Waste of server computing to implement this ehre 
-func ValidPassword() bool {}
-
-
-
-
-*/
-
-/*
-
-
-not finished stil have to validate  the input beforeinputing into database 
-also go over the the types of querying for sql and go lbray they are different.
-this should return an err.
-}
-*/

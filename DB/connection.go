@@ -14,20 +14,6 @@ var (Once sync.Once
 
 
 
-/*
-func createDBconnection() (*sql.DB, error) {
-    username := "root"
-    password := "1019026"
-    databaseName := "table"
-    // Create the data source name (DSN)
-    dsn := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s", username, password, databaseName)
-    db, err := sql.Open("mysql", dsn)
-    if err != nil {
-        return nil, err
-    }
-    return db, nil
-}
-*/
 func createDBConnection() (*sql.DB, error) {
     // MySQL connection details
     host := "127.0.0.1" // Docker container host

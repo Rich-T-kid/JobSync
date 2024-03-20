@@ -2,6 +2,8 @@ package Handlers
 
 import "net/http"
 
+// define  a render function in each of the subrouters. Mabey theres  a cleaner way to render html templates i just dont care tight now
+
 
 func SettingsHome(w http.ResponseWriter,r *http.Request){
 	info := []byte("hello world")

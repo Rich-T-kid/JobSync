@@ -12,6 +12,11 @@ var (
 	store = sessions.NewCookieStore(key)
 )
 
+/*
+add in structs that will represesnt the setting cookies so that it can be converted to json
+
+*/
+
 func generateSessionID() string {
 	return uuid.NewString()
 
@@ -56,4 +61,11 @@ func CreateNameCookie(DBUserName string) *http.Cookie {
     }
 	return &cookie
 }
+func ProfieSettingCookie(){}//all will return a cookie pointer  *http.Cookie{}
+
+func ContentPrefCookie() {}
+
+func AppearanceSettingscookie() {}
+
+func PrivacySettingCookie() {}
 

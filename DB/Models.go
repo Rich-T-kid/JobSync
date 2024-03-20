@@ -27,8 +27,8 @@ phone string
 type UserCookieSession struct {
     SessionID           string
     UserID              int
-    CreatedAt           time.Time
-    ExpirationTimestamp time.Time
+    CreatedAt           string
+    ExpirationTimestamp string
 }
 
 // PrivacySettings represents the privacy_settings table.

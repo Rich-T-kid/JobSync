@@ -3,25 +3,28 @@ package main
 import (
 	"fmt"
 	"log"
+	"proj/DB"
 	"proj/MiddleWare"
 
-	"proj/Routing"
 	"net/http"
+	"proj/Routing"
 )
 
 var chain http.Handler
 
-func init(){
+func init() {
 	Router := Routing.StartAllRouters()
-	chain = MiddleWare.New(MiddleWare.LogRequest , MiddleWare.StandardHeaders).Then(Router)
-	fmt.Print("Set Up Routers and middlware")
+	chain = MiddleWare.New(MiddleWare.LogRequest, MiddleWare.StandardHeaders).Then(Router)
+	fmt.Print("Set Up Routers and middlware.")
+	fmt.Println("Sett up database connection")
+	DB.DBConnection()
 }
 
 
-func main(){
+func main() {
 
-	fmt.Println("running server on local host 9000")
+	fmt.Println("running server on local host 8080")
 
-	log.Fatal(http.ListenAndServe(":9000",chain))
-	
+	log.Fatal(http.ListenAndServe(":8080", chain))
+
 }
