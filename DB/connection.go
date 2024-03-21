@@ -7,8 +7,6 @@ import (
 	env"proj/env"
 )
 
-
-
 var (Once sync.Once
 	db *sql.DB
 )
