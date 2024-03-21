@@ -1,15 +1,16 @@
 package Emails
 
 import (
-	"fmt"
 	"os"
+	"path/filepath"
 	"proj/Sessions"
-
+	"errors"
+	"fmt"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
-const APiKey = "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"
+const APiKey = "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" 
 const GenericTemplate = "We're thrilled to have you on board with JobSynce! Get ready to dive deeper into exciting career opportunities and vibrant developer communities. We can't wait to see where this journey takes you"
 const GenerticHtmlTemplate = "<strong>We're thrilled to have you on board with JobSynce! Get ready to dive deeper into exciting career opportunities and vibrant developer communities. We can't wait to see where this journey takes you.</strong><br/><i>This is an automated email - Please do not respond.</i>"
 
@@ -22,30 +23,49 @@ func SendEmail(Username, UserGmail, plaintext, html string) (int, error) {
     message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
     client := sendgrid.NewSendClient(APiKey)
     response, err := client.Send(message)
-    if err != nil {
-	    reportError(response.StatusCode,err)
-        return response.StatusCode, err
-    } else {
-	    reportSuccess(UserGmail)
-        return response.StatusCode, nil
+    if err != nil{
+	    reportError(-1,err)
+	    return -1,err
     }
-}
+	if response.StatusCode < 200 ||response.StatusCode > 299  {
+        // Handle non-200 status code
+        reportError(response.StatusCode, errors.New("non-200 status code returned"))
+        fmt.Println("Non-200 status code returned")
+        return response.StatusCode, errors.New("non-200 status code returned")
+    }
+
+    // If everything is successful, report success
+    reportSuccess(UserGmail)
+    return response.StatusCode, nil
+}    
 
 func reportError(status int ,er error ) error {
-    f, err := os.OpenFile("EmailErrorLogs.txt", os.O_APPEND|os.O_WRONLY, 0644)
+	curpwd := currentwd()
+	emailsDir := filepath.Join(curpwd, "Emails")
+
+    // Construct the path to the success email log file within the "Emails" directory
+    filePath := filepath.Join(emailsDir, "ErrorEmailLog.txt")
+    fmt.Println(filePath)
+    f, err := os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+//	f, err := os.OpenFile("EmailErrLogs.txt", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
     if err != nil{
     	return err} 
     defer f.Close() // Ensure file is closed after use
     currentTime := Sessions.FormatedTime()
-    // Write data to the file
-    _, err = fmt.Fprint(f, "Error occurred sending email at ", currentTime, " with the status code of ", status, " and error of ", er)
-    if err !=nil{
+    _, err = fmt.Fprint(f, "Error occurred sending email at ", currentTime, " with the status code of ", status, " and error of ", er,"\n" )
+    if err !=nil {
 	    return err}
     return nil 
 }
-
 func reportSuccess(email string ) error {
-    f, err := os.OpenFile("SuccessEmailLog.txt", os.O_APPEND|os.O_WRONLY, 0644)
+	curpwd := currentwd()
+	emailsDir := filepath.Join(curpwd, "Emails")
+
+    // Construct the path to the success email log file within the "Emails" directory
+    filePath := filepath.Join(emailsDir, "SuccessEmailLog.txt")
+	fmt.Println(filePath)
+    f, err := os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+    //f, err := os.OpenFile("SuccessEmailLog.txt",os.O_CREATE|os.O_WRONLY|os.O_APPEND,0644)
     if err != nil{
     	return err} 
     defer f.Close() 
@@ -63,3 +83,13 @@ func FakeSendEmail(Username, UserGmail, plaintext, html string) (int, error) {
 	return 0,nil
 }
 
+func currentwd() string {
+    // Get the current working directory
+    cwd, err := os.Getwd()
+    if err != nil {
+        fmt.Println("Error getting curent working dir for emails:", err)
+        return "" 
+    }
+
+     return cwd
+}

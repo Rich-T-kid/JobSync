@@ -15,9 +15,10 @@ var chain http.Handler
 func init() {
 	Router := Routing.StartAllRouters()
 	chain = MiddleWare.New(MiddleWare.LogRequest, MiddleWare.StandardHeaders).Then(Router)
-	fmt.Print("Set Up Routers and middlware.")
+	DB.StartConnection()
+
+	fmt.Println("set up routers")
 	fmt.Println("Sett up database connection")
-	DB.DBConnection()
 }
 
 

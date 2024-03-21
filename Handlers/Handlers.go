@@ -141,13 +141,13 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
        			 return
     			}
 				http.Error(w, err.Error(), http.StatusInternalServerError)
-			return}
-	// takes up api calls. Already confirmed that we can properly send emails so im graying this out for now.	
+			return 
+			}
 		// Need a way to validate that its a real email being passed.
 		status, err :=  Emails.SendEmail(username,email,Emails.GenericTemplate,Emails.GenerticHtmlTemplate)
+		fmt.Println(status,err)
 		if err != nil{
 			fmt.Println("error occured sending email, status err: ",status,err)}
-		fmt.Println("No error sending email")
 		http.Redirect(w, r, "/SignupConfirmation", http.StatusSeeOther)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)

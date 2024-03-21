@@ -3,17 +3,11 @@ package DB
 import (
 	"fmt"
 	"crypto/sha256"
-    	//"encoding/hex"
-//	"strings"
-
 	"time"
-//	"strconv"
 )
 var (
-
 	hashObject = sha256.New()
 )
-
 
 func CurrentTime() time.Time{
 	return time.Now()
@@ -42,12 +36,12 @@ func InputUser(Username , password , Email string,Phone_number interface{}) erro
         	return fmt.Errorf("User already exists")
     	}
 	// Validate.go Has a working has function include that here and in the valid login function
-	password = GenerateHash(password)
+	password = hashPassword(password)
 	formatedQuery := fmt.Sprintf("insert into users(Username,password,Email,Phone_number) values (\"%s\",\"%s\",\"%s\",\"%s\")", Username, password, Email, Phone_number)
 	_, er := db.Exec(formatedQuery)
 	return  er
 }
-func GenerateHash(password string) string{
+func GenerateHashfake(password string) string{
 	return password}
 
 func RealLogin(username , password string)  (string , error)  {
@@ -55,7 +49,7 @@ func RealLogin(username , password string)  (string , error)  {
 	if err != nil{
 		return "", fmt.Errorf("Database Connection down")
 	}
-	password = GenerateHash(password) 
+	password = hashPassword(password) 
 	query := "SELECT username FROM users WHERE Username = ? AND password = ?"
 	row , err := db.Query(query , username , password)
 	if err != nil{

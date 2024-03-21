@@ -131,7 +131,6 @@ func AllActiveUsers() ([]string, error) {
     return Users, nil
 }
 
-func dbSessionCLeaner() {}//goes through datbase regularly through mabey every minute and deltes all session that have expired 
 
 
 

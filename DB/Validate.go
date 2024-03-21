@@ -1,7 +1,7 @@
 package DB
-
-
 import (
+	"fmt"
+	"time"
     "crypto/sha256"
     "encoding/hex"
 )
@@ -19,3 +19,25 @@ func hashPassword(password string) string {
 //func CheckPasswordHash(password, hash string) bool { return HashPassword(password) == hash}
 
 func userNameAlreadyExist() bool {return false}//use this as validation for the front end javascript code
+
+// this goroutine runs for the whole lifespan of the program cleaning up user sessions. could move to its own api 
+func CleanDB() error {
+for {
+        prestatment := "DELETE FROM user_cookie_sessions WHERE expiration_timestamp <= NOW();"
+        delStatment, err := db.Prepare(prestatment)
+        if err != nil {
+            fmt.Println("error cleaning database cookies:", err)
+            return err
+        }
+        defer delStatment.Close()
+
+        _, err = delStatment.Exec()
+        if err != nil {
+            return err
+        }
+
+        // Sleep for a while before running the cleanup again
+        time.Sleep(1 * time.Minute) 
+    }
+}
+

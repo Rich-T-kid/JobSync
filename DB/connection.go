@@ -51,3 +51,8 @@ func DBConnection() (*sql.DB,error)  {
 	return db , nil
 	
 }
+func StartConnection(){
+	DBConnection()
+	go CleanDB()
+
+}
