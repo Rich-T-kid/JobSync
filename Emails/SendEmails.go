@@ -10,7 +10,7 @@ import (
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
-const APiKey = "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" 
+var APiKey = os.Getenv("EmailAPIKey")
 const GenericTemplate = "We're thrilled to have you on board with JobSynce! Get ready to dive deeper into exciting career opportunities and vibrant developer communities. We can't wait to see where this journey takes you"
 const GenerticHtmlTemplate = "<strong>We're thrilled to have you on board with JobSynce! Get ready to dive deeper into exciting career opportunities and vibrant developer communities. We can't wait to see where this journey takes you.</strong><br/><i>This is an automated email - Please do not respond.</i>"
 

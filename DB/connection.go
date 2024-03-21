@@ -4,6 +4,7 @@ import (
     _ "github.com/go-sql-driver/mysql"
     "sync"
     "fmt"
+	env"proj/env"
 )
 
 
@@ -54,5 +55,6 @@ func DBConnection() (*sql.DB,error)  {
 func StartConnection(){
 	DBConnection()
 	go CleanDB()
+	env.InitENV()
 
 }
