@@ -23,7 +23,6 @@ func init() {
 
 
 func main() {
-	//os.Setenv("EmailAPIKey", "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")
 	var APiKey = os.Getenv("EmailAPIKey")
 	fmt.Println("running server on local host 8080")
 	fmt.Println(APiKey)
