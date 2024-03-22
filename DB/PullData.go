@@ -39,6 +39,9 @@ func InputUser(Username , password , Email string,Phone_number interface{}) erro
 	password = hashPassword(password)
 	formatedQuery := fmt.Sprintf("insert into users(Username,password,Email,Phone_number) values (\"%s\",\"%s\",\"%s\",\"%s\")", Username, password, Email, Phone_number)
 	_, er := db.Exec(formatedQuery)
+	err = inputUserInDB(Username)
+	if err != nil{
+		return err}
 	return  er
 }
 func GenerateHashfake(password string) string{
@@ -69,5 +72,147 @@ func RealLogin(username , password string)  (string , error)  {
 }
 func ValidLogin(username string , password string) bool {
 	return true
-
 }
+
+func inputUserInDB(Username string)error {
+	  stmt0, err := db.Prepare("INSERT INTO privacy_settings (user_id) VALUES (?)")
+    if err != nil {
+        fmt.Println("Error preparing SQL statement:InputUserINDB", err)
+        return err
+    }
+    defer stmt0.Close()
+
+	stmt1, err := db.Prepare("INSERT INTO permission_table (userid) VALUES (?)")
+    if err != nil {
+        fmt.Println("Error preparing SQL statement:", err)
+        return err
+    }
+    defer stmt1.Close()
+    
+stmt2, err := db.Prepare("INSERT INTO notification_settings (user_id) VALUES (?)")
+    if err != nil {
+        fmt.Println("Error preparing SQL statement:", err)
+        return err
+    }
+    defer stmt2.Close()
+
+stmt3, err := db.Prepare("INSERT INTO appearance_settings (user_id) VALUES (?)")
+    if err != nil {
+        fmt.Println("Error preparing SQL statement:", err)
+        return err
+    }
+    defer stmt3.Close()
+
+    // Define the user ID value
+    yourUserID := idFromUserName(Username) // Replace with the actual user ID
+
+    // Execute the SQL statement with the user ID
+    _, err = stmt0.Exec(yourUserID)
+
+   if err != nil{return err} 
+    _, err = stmt1.Exec(yourUserID)
+
+   if err != nil{return err} 
+    _, err = stmt2.Exec(yourUserID)
+
+   if err != nil{return err} 
+    _, err = stmt3.Exec(yourUserID)
+    
+   if err != nil{return err} 
+   return nil
+}
+
+
+/*
+just for security reasons, overight all of the UserID return values from
+Scanning. Set it all to -1 as this cannot exist in the databse 
+
+*/
+
+func (p PrivacySettings) DbtoStruct(username string ) (interface{} ,error)  {
+	var pSetting PrivacySettings
+	userid := idFromUserName(username)
+	query := "select * from privacy_settings where user_id = ?"
+	row , err := db.Query(query,userid)
+	if err != nil{
+	return nil , err
+	}
+	for row.Next(){
+	err := row.Scan(&pSetting.userID , &pSetting.UsernameVisibility , &pSetting.FriendRequestsVisibility , &pSetting.ContentVisibility,&pSetting.LastUpdated)
+	if err != nil{
+		return nil , err}
+	}
+	PP := &pSetting
+	PP.userID = -1
+	return &pSetting , nil
+}
+
+
+func (a AppearanceSettings) DbtoStruct(username string) (interface{} , error) {
+	var pAppearanceSettings  AppearanceSettings
+	userid := idFromUserName(username)
+	query := "select * from appearance_settings where user_id = ?"
+	row , err := db.Query(query , userid)
+	if err != nil{
+		return nil , err
+	}
+	for row.Next(){
+		// Todo fill in the fields
+		err := row.Scan(
+    &pAppearanceSettings.userID,
+    &pAppearanceSettings.Theme,
+    &pAppearanceSettings.FontSize,
+    &pAppearanceSettings.ColorScheme,
+    &pAppearanceSettings.BackgroundImage,
+    &pAppearanceSettings.Language,
+    &pAppearanceSettings.ContentFilters,
+)
+	if err != nil{
+		return nil , err }
+
+	}
+
+	PP := &pAppearanceSettings
+	PP.userID = -1
+	return &pAppearanceSettings , nil
+}
+
+func (n NotificationSettings) DbtoStruct(username string)(interface{} , error)  {
+	var pNotificationSettings NotificationSettings
+	userid := idFromUserName(username)
+	query := "select * from notification_settings where user_id = ?"
+	row , err := db.Query(query,userid)
+	if err != nil{
+		return nil , err
+	}
+	for row.Next(){
+
+	err := row.Scan(&pNotificationSettings.userID, &pNotificationSettings.EmailNotifications ,&pNotificationSettings.PushNotifications ,&pNotificationSettings.NotificationFrequency )
+	if err != nil{
+		return nil , err}
+	}
+	PP := &pNotificationSettings
+	PP.userID = -1
+	return &pNotificationSettings , nil
+}
+
+
+func (p Permissions) DbtoStruct(username string) (interface{} , error) {
+	var pPermissions Permissions
+	userid := idFromUserName(username)
+	query := "select * from notification_settings"
+	row , err := db.Query(query , userid)
+	if err != nil{
+		return nil ,err}
+	for row.Next(){
+		err := row.Scan(&pPermissions.userID,&pPermissions.ID,&pPermissions.Permissions,&pPermissions.LastUpdated)
+		if err != nil{
+			return nil , err}
+	}
+	PP := &pPermissions
+	PP.userID = -1
+	return &pPermissions , nil
+} 
+
+
+

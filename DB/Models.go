@@ -13,6 +13,9 @@ type User struct{
 	*/
 }
 
+type  DBMarshall interface{
+	DbtoStruct(string) (interface{}, error ) 
+}
 type UserDB struct{
 UserID int
 Username string
@@ -33,15 +36,16 @@ type UserCookieSession struct {
 
 // PrivacySettings represents the privacy_settings table.
 type PrivacySettings struct {
-    UserID                int
+    userID                int
     UsernameVisibility    string
     FriendRequestsVisibility string
     ContentVisibility     string
+    LastUpdated time.Time
 }
 
 // AppearanceSettings represents the appearance_settings table.
 type AppearanceSettings struct {
-    UserID        int
+    userID        int
     Theme         string
     FontSize      string
     ColorScheme   string
@@ -50,9 +54,15 @@ type AppearanceSettings struct {
     ContentFilters string
 }
 
+type Permissions struct {
+	userID int
+	ID int
+	Permissions []string
+	LastUpdated time.Time
+}
 // NotificationSettings represents the notification_settings table.
 type NotificationSettings struct {
-    UserID               int
+    userID               int
     EmailNotifications   string
     PushNotifications    string
     NotificationFrequency string
@@ -64,13 +74,11 @@ type Session struct{
 	ExpiresAt time.Time
 }
 
+
+
 func RemoveUserSessionSlice(Usid string) {
     for idx, user := range UserSlice {
         if user.SessID == Usid {
             UserSlice = append(UserSlice[:idx], UserSlice[idx+1:]...)
 }}}
-type UserPermsions struct{
-	Userid int
-	Permissions []string
-}
 

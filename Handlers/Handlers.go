@@ -28,19 +28,26 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		Username := r.Form.Get("Username")
 		Password := r.Form.Get("Password")
-		DBUserName, Response := DB.RealLogin(Username,Password)
+		_, Response := DB.RealLogin(Username,Password)
 		if Response  != nil  {
 				http.Error(w,"You must login fisrt", http.StatusUnauthorized)
 		}else{
-			cookie := Sessions.CreateSessionCookie(Username,Password)
-			UserNameCookie := Sessions.CreateNameCookie(DBUserName)
+			Cookies , err := Sessions.GatherUserCookies(Username) //move both of these into the gatherUser cookies function. pass in username
+			if err != nil{
+				fmt.Fprint(w, err)
+				return }
+			cookie := Sessions.CreateSessionCookie(Username)
 			Temp := DB.User{ Name: Username, Password: Password,SessID :  cookie.Value,}
 			DB.UserSlice = append(DB.UserSlice , Temp)
-			if err := DB.StoreCookie(cookie,DBUserName); err != nil{
+			if err := DB.StoreCookie(cookie,Username); err != nil{
+				//this is only for the storagee cookie. other cookies already stored in database
 				fmt.Fprintln(w,err)	
 			}
-			http.SetCookie(w,cookie)
-			http.SetCookie(w,UserNameCookie)
+			Cookies = append(Cookies , cookie)
+			for _ , cookie  := range Cookies{
+				http.SetCookie(w,cookie)
+			}
+			http.SetCookie(w,cookie) // if done well wont need to do this by hand 
 			http.Redirect(w, r, "/homepage", http.StatusSeeOther)
 			return
 		}
@@ -57,12 +64,14 @@ func LogOutHandler(w http.ResponseWriter , r *http.Request){
 		
 	case "POST":
 		SessionCookie , err := r.Cookie("SessionID")
+
 		if err != nil{
 		http.Redirect(w,r,"/",http.StatusSeeOther)		
 		}
 		SessionCookie.Expires = time.Now().AddDate(0,0,-1)
 		http.SetCookie(w,SessionCookie)
 		DB.RemoveUserSessionSlice(SessionCookie.Value)
+		// need to remove all the cookies but mbaey it wont matter actaully
 		// remove the session from the database
 		DB.DeleteCookieSession(SessionCookie)
 		http.Redirect(w,r,"/",http.StatusSeeOther)

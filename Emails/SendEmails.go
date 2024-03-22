@@ -20,6 +20,7 @@ func SendEmail(Username, UserGmail, plaintext, html string) (int, error) {
     to := mail.NewEmail("Valued Customer", UserGmail)
     plainTextContent := "Hello " + Username + "\n\n" + plaintext
     htmlContent := "<p>Hello " + Username + "</p><p>" + "" + "</p>" + html
+    fmt.Println("the api key that was placed in here is :", APiKey)
     message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
     client := sendgrid.NewSendClient(APiKey)
     response, err := client.Send(message)
@@ -30,7 +31,6 @@ func SendEmail(Username, UserGmail, plaintext, html string) (int, error) {
 	if response.StatusCode < 200 ||response.StatusCode > 299  {
         // Handle non-200 status code
         reportError(response.StatusCode, errors.New("non-200 status code returned"))
-        fmt.Println("Non-200 status code returned")
         return response.StatusCode, errors.New("non-200 status code returned")
     }
 
@@ -45,9 +45,7 @@ func reportError(status int ,er error ) error {
 
     // Construct the path to the success email log file within the "Emails" directory
     filePath := filepath.Join(emailsDir, "ErrorEmailLog.txt")
-    fmt.Println(filePath)
     f, err := os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
-//	f, err := os.OpenFile("EmailErrLogs.txt", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
     if err != nil{
     	return err} 
     defer f.Close() // Ensure file is closed after use
@@ -63,9 +61,7 @@ func reportSuccess(email string ) error {
 
     // Construct the path to the success email log file within the "Emails" directory
     filePath := filepath.Join(emailsDir, "SuccessEmailLog.txt")
-	fmt.Println(filePath)
     f, err := os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
-    //f, err := os.OpenFile("SuccessEmailLog.txt",os.O_CREATE|os.O_WRONLY|os.O_APPEND,0644)
     if err != nil{
     	return err} 
     defer f.Close() 
