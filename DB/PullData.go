@@ -82,7 +82,7 @@ func inputUserInDB(Username string)error {
     }
     defer stmt0.Close()
 
-	stmt1, err := db.Prepare("INSERT INTO permission_table (userid) VALUES (?)")
+	stmt1, err := db.Prepare("INSERT INTO permission_table (user_id, permission) VALUES (? , ?) ")
     if err != nil {
         fmt.Println("Error preparing SQL statement:", err)
         return err
@@ -96,7 +96,7 @@ stmt2, err := db.Prepare("INSERT INTO notification_settings (user_id) VALUES (?)
     }
     defer stmt2.Close()
 
-stmt3, err := db.Prepare("INSERT INTO appearance_settings (user_id) VALUES (?)")
+stmt3, err := db.Prepare("INSERT INTO appearance_settings (user_id, content_filters) VALUES (?, ?) ")
     if err != nil {
         fmt.Println("Error preparing SQL statement:", err)
         return err
@@ -110,13 +110,17 @@ stmt3, err := db.Prepare("INSERT INTO appearance_settings (user_id) VALUES (?)")
     _, err = stmt0.Exec(yourUserID)
 
    if err != nil{return err} 
-    _, err = stmt1.Exec(yourUserID)
+   defaultPermissionsStr , err := stringsToJSON("Read","Write")
+   if err != nil{return err}
+   fmt.Println("jsonnnn string" , defaultPermissionsStr)
+    _, err = stmt1.Exec(yourUserID, defaultPermissionsStr)
 
    if err != nil{return err} 
     _, err = stmt2.Exec(yourUserID)
 
    if err != nil{return err} 
-    _, err = stmt3.Exec(yourUserID)
+   defualtFilters := `["Explicit"]`
+    _, err = stmt3.Exec(yourUserID,defualtFilters)
     
    if err != nil{return err} 
    return nil
@@ -131,19 +135,26 @@ Scanning. Set it all to -1 as this cannot exist in the databse
 
 func (p PrivacySettings) DbtoStruct(username string ) (interface{} ,error)  {
 	var pSetting PrivacySettings
+
+	fmt.Println("privacy settings  before ; ", pSetting)
 	userid := idFromUserName(username)
 	query := "select * from privacy_settings where user_id = ?"
 	row , err := db.Query(query,userid)
 	if err != nil{
 	return nil , err
 	}
+
+	var date string
 	for row.Next(){
-	err := row.Scan(&pSetting.userID , &pSetting.UsernameVisibility , &pSetting.FriendRequestsVisibility , &pSetting.ContentVisibility,&pSetting.LastUpdated)
+	err := row.Scan(&pSetting.userID , &pSetting.UsernameVisibility , &pSetting.FriendRequestsVisibility , &pSetting.ContentVisibility,&date)
 	if err != nil{
 		return nil , err}
 	}
+	validTime , err := parseTimeString(date)
 	PP := &pSetting
 	PP.userID = -1
+	PP.LastUpdated = validTime
+	fmt.Println("privacy settings  after ; ", pSetting)
 	return &pSetting , nil
 }
 
@@ -179,6 +190,7 @@ func (a AppearanceSettings) DbtoStruct(username string) (interface{} , error) {
 
 func (n NotificationSettings) DbtoStruct(username string)(interface{} , error)  {
 	var pNotificationSettings NotificationSettings
+
 	userid := idFromUserName(username)
 	query := "select * from notification_settings where user_id = ?"
 	row , err := db.Query(query,userid)
@@ -200,17 +212,21 @@ func (n NotificationSettings) DbtoStruct(username string)(interface{} , error)  
 func (p Permissions) DbtoStruct(username string) (interface{} , error) {
 	var pPermissions Permissions
 	userid := idFromUserName(username)
-	query := "select * from notification_settings"
+	query := "select * from permission_table where user_id = ?"
 	row , err := db.Query(query , userid)
 	if err != nil{
 		return nil ,err}
+	var date string
 	for row.Next(){
-		err := row.Scan(&pPermissions.userID,&pPermissions.ID,&pPermissions.Permissions,&pPermissions.LastUpdated)
+		err := row.Scan(&pPermissions.userID,&pPermissions.ID,&pPermissions.Permissions,&date)
 		if err != nil{
 			return nil , err}
 	}
+	ValidDate , err := parseTimeString(date) 
 	PP := &pPermissions
 	PP.userID = -1
+	PP.LastUpdated = ValidDate
+	fmt.Println("******************** perms  cookie : ", pPermissions)
 	return &pPermissions , nil
 } 
 

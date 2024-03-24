@@ -57,13 +57,13 @@ type AppearanceSettings struct {
 type Permissions struct {
 	userID int
 	ID int
-	Permissions []string
+	Permissions string
 	LastUpdated time.Time
 }
 // NotificationSettings represents the notification_settings table.
 type NotificationSettings struct {
     userID               int
-    EmailNotifications   string
+    EmailNotifications  string
     PushNotifications    string
     NotificationFrequency string
 }

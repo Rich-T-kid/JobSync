@@ -45,6 +45,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			Cookies = append(Cookies , cookie)
 			for _ , cookie  := range Cookies{
+				fmt.Println(cookie.Name ," cookie values  : " , cookie.Value)
 				http.SetCookie(w,cookie)
 			}
 			http.SetCookie(w,cookie) // if done well wont need to do this by hand 

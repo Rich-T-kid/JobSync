@@ -6,6 +6,7 @@ import (
 	"proj/DB"
 	"time"
 
+	"fmt"
 	"github.com/google/uuid"
 )
 var ( 
@@ -26,9 +27,13 @@ func GatherUserCookies(username string) ([]*http.Cookie, error) {
 	var NotifStruct DB.NotificationSettings
 	
 	PrivacyData ,err  := StructToJson(PrivStruct,username)
+	fmt.Println("privacy setting error" , err)
 	AppearanceData, err := StructToJson(AppeaStruct,username)
+	fmt.Println("appeanrence error " , err)
 	PermiData, err := StructToJson(PermStruct,username)
+	fmt.Println("permdataerro" , err)
 	NotificationData, err := StructToJson(NotifStruct,username)
+	fmt.Println("notifs error" , err)
 	if err != nil {
 	return nil , err
 	}

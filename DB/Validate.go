@@ -2,6 +2,7 @@ package DB
 import (
 	"fmt"
 	"time"
+	"encoding/json"
     "crypto/sha256"
     "encoding/hex"
 )
@@ -40,4 +41,15 @@ for {
         time.Sleep(1 * time.Minute) 
     }
 }
+func stringsToJSON(args ...string) (string, error) {
+    // Convert variadic input strings to a slice of strings
+    stringsSlice := []string(args)
 
+    // Marshal the slice into JSON format
+    jsonString, err := json.Marshal(stringsSlice)
+    if err != nil {
+        return "", err
+    }
+
+    return  string(jsonString) , err 
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .top-bar {
+            height: 60px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .chat-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .chat-box {
+            display: flex;
+            width: 70%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .users-pane {
+            width: 30%;
+            background-color: #f0f0f0;
+            border-right: 1px solid #ccc;
+        }
+
+        .chat-pane {
+            flex: 1;
+            padding: 10px;
+            position: relative; /* Added */
+        }
+
+        .message-container {
+            height: 300px;
+            overflow-y: scroll; 
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px; 
+            padding: 10px;
+        }
+
+        input[type="text"] {
+            width: calc(70% - 10px); /* Adjusted width */
+            margin-right: 5px; /* Added margin */
+        }
+
+        button.send-btn {
+            background-color: #007bff; /* Blue Send button */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button.upload-btn {
+            background-color: #4CAF50; /* Green Upload button */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute; /* Added */
+            top: 0; /* Adjust top position */
+            right: 100%; /* Adjust right position */
+            margin-right: 5px; /* Added margin */
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <!-- Links to other parts of the site -->
+        <a href="#">Link 1</a>
+        <a href="#">Link 2</a>
+        <a href="#">Link 3</a>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-box">
+            
+            <div class="users-pane">
+                <!-- Left pane for possible users -->
+                <h2>Possible Users</h2>
+                <ul>
+                    <li>User 1</li>
+                    <li>User 2</li>
+                    <li>User 3</li>
+                    <!-- Add more users here -->
+                </ul>
+                <button class="upload-btn">Upload Image</button> <!-- Upload image button -->
+            </div>
+            
+            <div class="chat-pane">
+                <!-- Main chat application pane -->
+                <h2>Chat</h2>
+                <div class="message-container" id="chat-messages">
+                    <!-- Chat messages will appear here -->
+                </div>
+                <input type="text" placeholder="Type your message...">
+                <button id="SendTextMSG" class="send-btn">Send</button>
+                <button id="UploadFileButton" class="send-btn">Upload File</button>
+                <!-- Image upload button next to Send button -->
+                <!-- Upload image button will go here -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
