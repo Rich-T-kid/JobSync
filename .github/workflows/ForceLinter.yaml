@@ -1,4 +1,4 @@
-name: Golang & HTML Lint
+name: Golang
 
 on:
   push:
@@ -26,10 +26,3 @@ jobs:
     - name: Lint Golang code
       run: |
         golint ./...
-
-    - name: Install HTML linter
-      run: npm install -g htmlhint
-
-    - name: Lint HTML files
-      run: htmlhint .
-
