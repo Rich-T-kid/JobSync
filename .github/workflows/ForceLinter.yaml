@@ -1,0 +1,35 @@
+name: Golang & HTML Lint
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: Install Go linter
+      run: |
+        go install golang.org/x/lint/golint@latest
+
+    - name: Lint Golang code
+      run: |
+        golint ./...
+
+    - name: Install HTML linter
+      run: npm install -g htmlhint
+
+    - name: Lint HTML files
+      run: htmlhint .
+
