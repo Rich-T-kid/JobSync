@@ -3,6 +3,7 @@ package Routing
 import (
 	"github.com/gorilla/mux"
 	//"fmt"
+	"proj/ChatServer"	
 	"proj/Handlers"
 )
 
@@ -51,6 +52,7 @@ func SetUpLocalConnections() {
 // Prefix /chill
 func SetUpChill() {
 	chill.HandleFunc("", Handlers.ChillHome)
+	chill.HandleFunc("/wsConnection", ChatServer.WebSocketConnection)
 }
 
 // Prefix /jobs

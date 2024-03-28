@@ -5,7 +5,6 @@ import (
 	"log"
 	"proj/DB"
 	"proj/MiddleWare"
-	"os"
 	"net/http"
 	"proj/Routing"
 )
@@ -23,9 +22,7 @@ func init() {
 
 
 func main() {
-	var APiKey = os.Getenv("EmailAPIKey")
 	fmt.Println("running server on local host 8080")
-	fmt.Println(APiKey)
 	log.Fatal(http.ListenAndServe(":8080", chain))
 
 }

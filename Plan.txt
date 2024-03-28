@@ -51,3 +51,4 @@ Data and Privacy:
 Data export or download options
 Data deletion or account closure requests
 Privacy policy and terms of service review
+https://www.kelche.co/blog/go/golang-environment-variables/#:~:text=To%20get%20an%20environment%20variable,will%20return%20an%20empty%20string.

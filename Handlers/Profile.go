@@ -1,8 +1,11 @@
 package Handlers
-import "net/http"
+
+import (
+	"fmt"
+	"net/http"
+)
 
 
 func ProfileHomePage(w http.ResponseWriter,r *http.Request){
-	info := []byte("profile Home Page")
-	w.Write(info)
+	fmt.Fprintf(w,"Profile_page lol")
 }
