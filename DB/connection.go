@@ -56,5 +56,12 @@ func StartConnection(){
 	DBConnection()
 	go CleanDB()
 	env.InitENV()
+	awsConnection()
 
 }
+func awsConnection(){
+	fmt.Println("create aws connection ricahrd")
+ //ToDo: create and establish cloud aws connection for image uploads to s3 buckets
+}
+
+

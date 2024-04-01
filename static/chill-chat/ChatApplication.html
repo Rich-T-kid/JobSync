@@ -120,32 +120,42 @@
             margin-right: 5px;
         }
         .message-user {
-        background-color: #023079; /* Blue for user messages */
-        color: #2a16df;
+        background-color: #007AFF; /* Blue for user messages */
+        color: white;
         margin-bottom: 5px;
         padding: 8px 12px;
         border-radius: 10px;
-        align-self: flex-start; /* Align user messages to the left */
-        }
+        align-self: flex-end; /* Align user messages to the left */
+        max-width: 70%; /* Limit the width of the message */
+        word-wrap: break-word; /* Wrap long words */
+    }
 
-        .message-others {
-        background-color: #247926; /* Green for others messages */
-        color: #0ee07e;
+    .message-others {
+        background-color: #E4F9F1; /* Grayish-green for others messages */
+        color: black;
         margin-bottom: 5px;
         padding: 8px 12px;
         border-radius: 10px;
-        align-self: flex-end; /* Align others messages to the right */
-        }
+        align-self: flex-start; /* Align others messages to the right */
+        max-width: 70%; /* Limit the width of the message */
+        word-wrap: break-word; /* Wrap long words */
+    }
     </style>
     <script>
         window.onload = function () {
+            const realUsernameElement = document.getElementById('RealUsername');
+            // Retrieve the text content of the element
+            const username = realUsernameElement.textContent.trim();
+
             var conn;
             var msg = document.getElementById("msg");
             var log = document.getElementById("chat-messages");
     
             function appendLog(item, isUser) {
+                //console.log("ataully message: ". item.msg)
                 var doScroll = log.scrollTop > log.scrollHeight - log.clientHeight - 1;
                 // Apply appropriate CSS class based on whether the message is from the user or others
+                console.log("item" , item, "isuser: ", isUser)
                 if (isUser) {
                     item.classList.add("message-user");
                 } else {
@@ -179,15 +189,43 @@
                     appendLog(item, false); // Use false for others messages
                 };
                 conn.onmessage = function (evt) {
+                    clientInfoRemoved = removeSenderInfo(evt.data) // removes the *user Sent:         From Golang
                     var item = document.createElement("div");
-                    item.innerText = evt.data;
-                    appendLog(item, false); // Use false for others messages
+                    item.innerText = clientInfoRemoved;
+                    
+                    if (username === getFirstWord(evt.data)){
+                    appendLog(item, true); }// if the username matches the message being sent that its your own message.
+                    else{
+                        appendLog(item,false)
+                    }
                 };
             } else {
                 var item = document.createElement("div");
                 item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
                 appendLog(item, false); // Use false for others messages
             }
+            function getFirstWord(inputString) {
+                // Split the input string into an array of words
+                let words = inputString.trim().split(' ');
+                
+                // Return the first word (element at index 0)
+                return words[0];
+            }
+            function removeSenderInfo(inputString) {
+                // Find the index of the first occurrence of ":" in the input string
+                const colonIndex = inputString.indexOf(':');
+                
+                // Check if ":" exists in the input string
+                if (colonIndex !== -1) {
+                    // Return the substring after ":" with leading and trailing whitespace removed
+                    return inputString.slice(colonIndex + 2).trim();
+                } else {
+                    // If ":" is not found, return the input string as is
+                    return inputString;
+                }
+            }
+
+        
         };
     </script>
 </head>
@@ -202,11 +240,12 @@
         <h1>JobSync</h1>
         <!-- Other elements in the top bar -->
     </div>
+    <div  id="RealUsername" class="user-placeholder">{{.Username}}</div>
 
     <div class="chat-container">
         <div class="chat-box">
             <div class="users-pane">
-                <h3>Possible Users</h3>
+                <h3>Possible Connections</h3>
                 <ul>
                     <!-- Populate this list dynamically -->
                     {{.UserFriends}}

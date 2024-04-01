@@ -53,18 +53,6 @@ func WebSocketConnection(w http.ResponseWriter , r *http.Request){
             if err != nil {
                 fmt.Println(err)
             }
-	/*	
-	    c , _ :=  r.Cookie("UsernameCookie")
-	    forconsol := c.Value
-	    fmt.Printf("%s sent: %s\n", forconsol , string(msg))
-            
-	    // Print the message to the console
-	   /* 
-            fmt.Printf("%s sent: %s\n", displayName , string(msg))
-	    changestr := fmt.Sprintf("%s sent: %s\n" ,displayName , string(msg))
-	    newmsg := []byte(changestr)
-            */
-	    // Write message back to browser
 	    for conn   = range table{
 		    username , _ := r.Cookie("UserNameCookie")
 		    displayName := username.Value
@@ -75,3 +63,15 @@ func WebSocketConnection(w http.ResponseWriter , r *http.Request){
             }}
         }
 }
+
+
+/*
+
+Implement a way to load the message sent bewtween two users before they joined. Doesnt have to be from database implenation just yet
+mabey just store as an array of strings that are appeneded to in queue orded and then loaded in
+
+
+Once this is done will bust msuta easier to remove the state from the server and encapsulate in the database 
+
+
+*/

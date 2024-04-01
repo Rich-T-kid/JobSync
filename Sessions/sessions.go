@@ -56,7 +56,7 @@ func CreateNameCookie(DBUserName string) *http.Cookie {
 		Value:    DBUserName,
 		Path:     "/",
 		MaxAge:   3600,
-		HttpOnly: true,
+		HttpOnly: false,
 		SameSite: http.SameSiteLaxMode,
     }
 	return &cookie

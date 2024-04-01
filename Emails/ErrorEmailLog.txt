@@ -1,0 +1,1 @@
+Error occurred sending email at March 30 07:00 PM with the status code of 401 and error of non-200 status code returned
