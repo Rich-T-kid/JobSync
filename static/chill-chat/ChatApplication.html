@@ -119,27 +119,27 @@
             right: 100%;
             margin-right: 5px;
         }
-        .message-user {
-        background-color: #007AFF; /* Blue for user messages */
-        color: white;
-        margin-bottom: 5px;
-        padding: 8px 12px;
-        border-radius: 10px;
-        align-self: flex-end; /* Align user messages to the left */
-        max-width: 70%; /* Limit the width of the message */
-        word-wrap: break-word; /* Wrap long words */
-    }
+        .message-user,
+        .message-others {
+            display: block; /* Set display to block */
+            max-width: 70%; /* Limit the maximum width of the bubbles */
+            margin-bottom: 5px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            word-wrap: break-word; /* Wrap long words */
+        }
 
-    .message-others {
-        background-color: #E4F9F1; /* Grayish-green for others messages */
-        color: black;
-        margin-bottom: 5px;
-        padding: 8px 12px;
-        border-radius: 10px;
-        align-self: flex-start; /* Align others messages to the right */
-        max-width: 70%; /* Limit the width of the message */
-        word-wrap: break-word; /* Wrap long words */
-    }
+        .message-user {
+            background-color: #007AFF; /* Blue for user messages */
+            color: white;
+            /* Remove align-self property */
+        }
+
+        .message-others {
+            background-color: #E4F9F1; /* Grayish-green for others messages */
+            color: black;
+            /* Remove align-self property */
+        }
     </style>
     <script>
         window.onload = function () {
@@ -183,27 +183,42 @@
     
             if (window["WebSocket"]) {
                 conn = new WebSocket("ws://localhost:8080/chill/wsConnection"); // Updated WebSocket URL
-                conn.onclose = function (evt) {
-                    var item = document.createElement("div");
-                    item.innerHTML = "<b>Connection closed.</b>";
-                    appendLog(item, false); // Use false for others messages
-                };
                 conn.onmessage = function (evt) {
-                    clientInfoRemoved = removeSenderInfo(evt.data) // removes the *user Sent:         From Golang
-                    var item = document.createElement("div");
+                // Remove sender info from the message
+                const clientInfoRemoved = removeSenderInfo(evt.data);
+                
+                // Create message item element
+                var item = document.createElement("div");
+
+                // Check if the message is a URL
+                if (isValidURL(clientInfoRemoved)) {
+                    // If it's a URL, create an image element for preview
+                    const imagePreview = document.createElement("img");
+                    imagePreview.src = clientInfoRemoved;
+                    imagePreview.classList.add("image-preview");
+                    imagePreview.style.maxWidth = "250px";
+                    imagePreview.style.maxHeight = "400px";
+                    item.appendChild(imagePreview);
+                } else {
+                    // If it's not a URL, display the message as text
                     item.innerText = clientInfoRemoved;
-                    
-                    if (username === getFirstWord(evt.data)){
-                    appendLog(item, true); }// if the username matches the message being sent that its your own message.
-                    else{
-                        appendLog(item,false)
-                    }
-                };
+                }
+                
+                // Check if the message is sent by the current user
+                if (username === getFirstWord(evt.data)) {
+                    appendLog(item, true); // If it's the user's own message
+                } else {
+                    appendLog(item, false); // If it's from other users
+                }
+        };
+
             } else {
                 var item = document.createElement("div");
                 item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
                 appendLog(item, false); // Use false for others messages
             }
+
+
             function getFirstWord(inputString) {
                 // Split the input string into an array of words
                 let words = inputString.trim().split(' ');
@@ -223,6 +238,15 @@
                     // If ":" is not found, return the input string as is
                     return inputString;
                 }
+            }
+            function isValidURL(str) {
+                const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+                    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+                return !!pattern.test(str);
             }
 
         

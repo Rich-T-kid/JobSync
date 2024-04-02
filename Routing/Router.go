@@ -35,3 +35,9 @@ func jobsSubrouter(r *mux.Router) *mux.Router {
 	// Define routes for the "/jobs" subrouter
 	return jobsRouter
 }
+
+func apiRouter(r *mux.Router) *mux.Router{
+	apiRouter := r.PathPrefix("/Api").Subrouter()
+	// Define Routers for /Api subrouter
+	return apiRouter
+}

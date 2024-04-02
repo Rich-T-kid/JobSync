@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
+	"os"
 	"proj/DB"
 	"proj/MiddleWare"
-	"net/http"
 	"proj/Routing"
 )
 
@@ -22,6 +23,8 @@ func init() {
 
 
 func main() {
+	value := os.Getenv("EmailAPIKey")
+	fmt.Println("email api  =" , value)
 	fmt.Println("running server on local host 8080")
 	log.Fatal(http.ListenAndServe(":8080", chain))
 

@@ -1,10 +1,14 @@
 package DB
+
 import (
-    "database/sql"
-    _ "github.com/go-sql-driver/mysql"
-    "sync"
-    "fmt"
-	env"proj/env"
+	"database/sql"
+	"strconv"
+	"fmt"
+	"log"
+	"sync"
+	"os"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 )
 
 
@@ -17,15 +21,19 @@ var (Once sync.Once
 
 func createDBConnection() (*sql.DB, error) {
     // MySQL connection details
-    host := "127.0.0.1" // Docker container host
-    port := 3305        // Docker container port
-    username := "root"
-    password := "richard"
-    databaseName := "jobsync"
-
+    host := os.Getenv("host")
+    port := os.Getenv("port")
+    username := os.Getenv("username")
+    password := os.Getenv("password")
+    databaseName := os.Getenv("databaseName")
     // Create the data source name (DSN)
-    dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", username, password, host, port, databaseName)
+    port1 , _ := stringToNumber(port) 
+    dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", username, password, host, port1, databaseName)
 
+
+
+
+    fmt.Println("current sql connection string", dsn)
     // Open a connection to the MySQL server
     db, err := sql.Open("mysql", dsn)
     if err != nil {
@@ -52,10 +60,26 @@ func DBConnection() (*sql.DB,error)  {
 	return db , nil
 	
 }
+func loadEnviromentVars(){
+	log.Println("loading enviroment varibaleS")
+	godotenv.Load()
+}
+func stringToNumber(input string) (int, error) {
+    // Convert string to integer
+    number, err := strconv.Atoi(input)
+    if err != nil {
+        // Return 0 and the error if conversion fails
+        return 0, err
+    }
+    // Return the converted number and no error
+    return number, nil
+}
+
+
 func StartConnection(){
+	loadEnviromentVars()
 	DBConnection()
 	go CleanDB()
-	env.InitENV()
 	awsConnection()
 
 }

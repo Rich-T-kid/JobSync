@@ -13,6 +13,7 @@ var (
 	localconnections *mux.Router = localConnectionsSubrouter(Router)
 	chill            *mux.Router = chillSubrouter(Router)
 	jobs             *mux.Router = jobsSubrouter(Router)
+	api        *mux.Router = apiRouter(Router)
 )
 
 // this will be the whole application
@@ -58,6 +59,11 @@ func SetUpChill() {
 // Prefix /jobs
 func SetUpJobs() {
 	jobs.HandleFunc("", Handlers.JobsHomePage)
+}
+// Prefix /Api
+func SetUpAPIRouter(){
+	api.HandleFunc("/UploadFile",Handlers.FileUpload).Methods("GET","POST")
+
 }
 
 // Start main router and subrouters
