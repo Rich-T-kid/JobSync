@@ -8,9 +8,6 @@ type User struct{
 	Name string
 	Password interface{}
 	SessID  string
-	/*Email string
-	PhoneNumber string
-	*/
 }
 
 type  DBMarshall interface{

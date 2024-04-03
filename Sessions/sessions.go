@@ -6,7 +6,6 @@ import (
 	"proj/DB"
 	"time"
 
-	"fmt"
 	"github.com/google/uuid"
 )
 var ( 
@@ -27,13 +26,9 @@ func GatherUserCookies(username string) ([]*http.Cookie, error) {
 	var NotifStruct DB.NotificationSettings
 	
 	PrivacyData ,err  := StructToJson(PrivStruct,username)
-	fmt.Println("privacy setting error" , err)
 	AppearanceData, err := StructToJson(AppeaStruct,username)
-	fmt.Println("appeanrence error " , err)
 	PermiData, err := StructToJson(PermStruct,username)
-	fmt.Println("permdataerro" , err)
 	NotificationData, err := StructToJson(NotifStruct,username)
-	fmt.Println("notifs error" , err)
 	if err != nil {
 	return nil , err
 	}
@@ -89,7 +84,7 @@ func CreateNameCookie(DBUserName string) *http.Cookie {
 func NotificationCookie(String_NotifsData string) (*http.Cookie)  {
 	cookie := http.Cookie{
 		Name:     "NotificationCookie",
-		Value:    String_NotifsData,
+		Value:    EncodeJSONToBase64(String_NotifsData[1:len(String_NotifsData)-1]),
 		Path:     "/",
 		MaxAge:   3600,
 		HttpOnly: true,
@@ -102,7 +97,7 @@ return &cookie
 func PermissionsCookie(String_PrivData string) (*http.Cookie) {
 	cookie := http.Cookie{
 		Name:     "PermissionsCookie",
-		Value:    String_PrivData,
+		Value:    EncodeJSONToBase64(String_PrivData[1:len(String_PrivData)-1]),
 		Path:     "/",
 		MaxAge:   3600,
 		HttpOnly: true,
@@ -115,7 +110,7 @@ func PermissionsCookie(String_PrivData string) (*http.Cookie) {
 func AppearanceSettingscookie(String_AppData string) (*http.Cookie) {
 	cookie := http.Cookie{
 		Name:     "AppearanceSetting",
-		Value:    String_AppData,
+		Value:     EncodeJSONToBase64(String_AppData[1:len(String_AppData)-1]),
 		Path:     "/",
 		MaxAge:   3600,
 		HttpOnly: true,
@@ -127,7 +122,7 @@ func AppearanceSettingscookie(String_AppData string) (*http.Cookie) {
 func PrivacySettingCookie(String_PrivData string) (*http.Cookie) {
 	cookie := http.Cookie{
 		Name:     "PrivacySettings",
-		Value:    String_PrivData,
+		Value:    EncodeJSONToBase64(String_PrivData[1:len(String_PrivData)-1]),
 		Path:     "/",
 		MaxAge:   3600,
 		HttpOnly: true,

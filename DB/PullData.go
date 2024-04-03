@@ -41,6 +41,7 @@ func InputUser(Username , password , Email string,Phone_number interface{}) erro
 	_, er := db.Exec(formatedQuery)
 	err = inputUserInDB(Username)
 	if err != nil{
+		fmt.Println(err)
 		return err}
 	return  er
 }
@@ -109,20 +110,21 @@ stmt3, err := db.Prepare("INSERT INTO appearance_settings (user_id, content_filt
     // Execute the SQL statement with the user ID
     _, err = stmt0.Exec(yourUserID)
 
-   if err != nil{return err} 
+   if err != nil{fmt.Println(err)} 
    defaultPermissionsStr , err := stringsToJSON("Read","Write")
-   if err != nil{return err}
+   if err != nil{fmt.Println(err)}
    fmt.Println("jsonnnn string" , defaultPermissionsStr)
     _, err = stmt1.Exec(yourUserID, defaultPermissionsStr)
 
-   if err != nil{return err} 
+    fmt.Println("error from perimson insertion: , ", err)
+   if err != nil{fmt.Println(err)} 
     _, err = stmt2.Exec(yourUserID)
 
-   if err != nil{return err} 
+   if err != nil{fmt.Println(err)} 
    defualtFilters := `["Explicit"]`
     _, err = stmt3.Exec(yourUserID,defualtFilters)
     
-   if err != nil{return err} 
+   if err != nil{fmt.Println(err)} 
    return nil
 }
 
@@ -154,7 +156,6 @@ func (p PrivacySettings) DbtoStruct(username string ) (interface{} ,error)  {
 	PP := &pSetting
 	PP.userID = -1
 	PP.LastUpdated = validTime
-	fmt.Println("privacy settings  after ; ", pSetting)
 	return &pSetting , nil
 }
 
@@ -226,7 +227,6 @@ func (p Permissions) DbtoStruct(username string) (interface{} , error) {
 	PP := &pPermissions
 	PP.userID = -1
 	PP.LastUpdated = ValidDate
-	fmt.Println("******************** perms  cookie : ", pPermissions)
 	return &pPermissions , nil
 } 
 
