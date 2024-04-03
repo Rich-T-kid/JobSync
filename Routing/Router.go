@@ -1,20 +1,21 @@
 package Routing
 
-import (// "net/http" 
+import ( // "net/http"
 	"github.com/gorilla/mux"
 )
+
 var (
-    GlobalRouter *mux.Router = nil
+	GlobalRouter *mux.Router = nil
 )
 
 func globalRouter() *mux.Router {
-    if GlobalRouter == nil {
-        GlobalRouter = mux.NewRouter()
-    }
-    return GlobalRouter
+	if GlobalRouter == nil {
+		GlobalRouter = mux.NewRouter()
+	}
+	return GlobalRouter
 }
 
-func settingSubrouter(r  *mux.Router) *mux.Router {
+func settingSubrouter(r *mux.Router) *mux.Router {
 	settingrouter := r.PathPrefix("/settings").Subrouter()
 	return settingrouter
 }

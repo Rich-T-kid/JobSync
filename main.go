@@ -1,31 +1,29 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"net/http"
+	"proj/Autho"
 	"proj/DB"
 	"proj/MiddleWare"
-	"os"
-	"net/http"
 	"proj/Routing"
 )
 
 var chain http.Handler
+var UniversalLogger = Autho.NewGlobalLogger("SystemLogs")
 
 func init() {
 	Router := Routing.StartAllRouters()
 	chain = MiddleWare.New(MiddleWare.LogRequest, MiddleWare.StandardHeaders).Then(Router)
 	DB.StartConnection()
-	
-	fmt.Println("set up routers")
-	fmt.Println("Sett up database connection")
+
+	defer UniversalLogger.CleanUp()
+	UniversalLogger.Info.Output("Started Routers")
+	UniversalLogger.Info.Output("Set up Database connection")
 }
 
-
 func main() {
-	var APiKey = os.Getenv("EmailAPIKey")
-	fmt.Println("running server on local host 8080")
-	fmt.Println(APiKey)
+	UniversalLogger.Info.Output("running server on local host 8080")
 	log.Fatal(http.ListenAndServe(":8080", chain))
 
 }

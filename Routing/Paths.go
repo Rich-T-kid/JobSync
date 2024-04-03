@@ -20,7 +20,6 @@ var (
 func SetUpRouter() *mux.Router { //this should be called in main package
 	Router.HandleFunc("/", Handlers.LoginHandler).Methods("GET", "POST")
 
-
 	Router.HandleFunc("/Test", Handlers.TestHandler).Methods("GET")
 
 	Router.HandleFunc("/logout", Handlers.LogOutHandler).Methods("GET", "POST")

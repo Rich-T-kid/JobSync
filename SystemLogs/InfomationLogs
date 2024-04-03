@@ -1,0 +1,9 @@
+
+  < ServerStart >2024-04-03 16:37:00 <--------------> 
+Info 2024/04/03 16:37:00 main.go:26: running server on local host 8080
+
+  < ServerStart >2024-04-03 16:37:48 <--------------> 
+Info 2024/04/03 16:37:48 main.go:26: running server on local host 8080
+
+  < ServerStart >2024-04-03 16:40:52 <--------------> 
+Info 2024/04/03 16:40:52 main.go:26: running server on local host 8080

@@ -1,19 +1,19 @@
-package Handlers 
-import ("time"
-	"fmt"  
+package Handlers
+
+import (
+	"fmt"
+	"html/template"
 	"net/http"
 	"path/filepath"
-	"html/template"
-         "proj/DB"
-	 "proj/Sessions"
+	"proj/DB"
 	"proj/Emails"
-
+	"proj/Sessions"
+	"time"
 )
 
 const (
-	Logfpath = "../JobSyncLogs.txt" 
+	Logfpath = "../JobSyncLogs.txt"
 )
-
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -28,19 +28,19 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		Username := r.Form.Get("Username")
 		Password := r.Form.Get("Password")
-		DBUserName, Response := DB.RealLogin(Username,Password)
-		if Response  != nil  {
-				http.Error(w,"You must login fisrt", http.StatusUnauthorized)
-		}else{
-			cookie := Sessions.CreateSessionCookie(Username,Password)
+		DBUserName, Response := DB.RealLogin(Username, Password)
+		if Response != nil {
+			http.Error(w, "You must login fisrt", http.StatusUnauthorized)
+		} else {
+			cookie := Sessions.CreateSessionCookie(Username, Password)
 			UserNameCookie := Sessions.CreateNameCookie(DBUserName)
-			Temp := DB.User{ Name: Username, Password: Password,SessID :  cookie.Value,}
-			DB.UserSlice = append(DB.UserSlice , Temp)
-			if err := DB.StoreCookie(cookie,DBUserName); err != nil{
-				fmt.Fprintln(w,err)	
+			Temp := DB.User{Name: Username, Password: Password, SessID: cookie.Value}
+			DB.UserSlice = append(DB.UserSlice, Temp)
+			if err := DB.StoreCookie(cookie, DBUserName); err != nil {
+				fmt.Fprintln(w, err)
 			}
-			http.SetCookie(w,cookie)
-			http.SetCookie(w,UserNameCookie)
+			http.SetCookie(w, cookie)
+			http.SetCookie(w, UserNameCookie)
 			http.Redirect(w, r, "/homepage", http.StatusSeeOther)
 			return
 		}
@@ -49,70 +49,74 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func LogOutHandler(w http.ResponseWriter , r *http.Request){
-	switch r.Method{
+func LogOutHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
 	case "GET":
-	
-   		renderTemplate(w, "LogOut.html", nil)
-		
+
+		renderTemplate(w, "LogOut.html", nil)
+
 	case "POST":
-		SessionCookie , err := r.Cookie("SessionID")
-		if err != nil{
-		http.Redirect(w,r,"/",http.StatusSeeOther)		
+		SessionCookie, err := r.Cookie("SessionID")
+		if err != nil {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}
-		SessionCookie.Expires = time.Now().AddDate(0,0,-1)
-		http.SetCookie(w,SessionCookie)
+		SessionCookie.Expires = time.Now().AddDate(0, 0, -1)
+		http.SetCookie(w, SessionCookie)
 		DB.RemoveUserSessionSlice(SessionCookie.Value)
 		// remove the session from the database
 		DB.DeleteCookieSession(SessionCookie)
-		http.Redirect(w,r,"/",http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	default:
-		http.Error(w,"Method not allowed",http.StatusMethodNotAllowed)
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
-// move this to its ownfile once finished setting up the routers and subrouters. 
+
+// move this to its ownfile once finished setting up the routers and subrouters.
 // figure out how youll model user prefrences with cookies and perist this to the databse
-func ActiveHandler(w http.ResponseWriter , r *http.Request){
-	switch r.Method{
-		case "GET":
-			renderTemplate(w,"ActiveSesion.html",DB.UserSlice)
-		default:
-			http.Error(w,"Method not allowed " , http.StatusMethodNotAllowed)
-	}}
-
-
-func ForgotHandler(w http.ResponseWriter, r *http.Request){
-	switch r.Method{
+func ActiveHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
 	case "GET":
-		renderTemplate(w,"ForgotConfirm.html",nil)
-		default:
-			http.Error(w,"Method not allowed",http.StatusMethodNotAllowed)
-		}
-	}
-func ForgotPassHandler(w http.ResponseWriter, r *http.Request){
-	switch r.Method{
-	case "GET":
-		renderTemplate(w,"forgotPassword.html.html",nil)
+		renderTemplate(w, "ActiveSesion.html", DB.UserSlice)
 	default:
-		http.Error(w,"Method not allowed", http.StatusMethodNotAllowed)
-}}
-func HomePageHandler(w http.ResponseWriter, r *http.Request){
-	switch r.Method{
+		http.Error(w, "Method not allowed ", http.StatusMethodNotAllowed)
+	}
+}
+
+func ForgotHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
 	case "GET":
-		UserNameCookie , err := r.Cookie("UserNameCookie")
-		if err != nil{
+		renderTemplate(w, "ForgotConfirm.html", nil)
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+func ForgotPassHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		renderTemplate(w, "forgotPassword.html.html", nil)
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+func HomePageHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		UserNameCookie, err := r.Cookie("UserNameCookie")
+		if err != nil {
 			fmt.Print(err)
-		return }
+			return
+		}
 		username := UserNameCookie.Value
 		data := struct {
-        	Username string
-   	 	}{
-        	Username: username,}
-		fmt.Println(data , data.Username)		
-		renderTemplate(w,"homepage.html",data)
+			Username string
+		}{
+			Username: username}
+		fmt.Println(data, data.Username)
+		renderTemplate(w, "homepage.html", data)
 	default:
-		http.Error(w,"Method notallowed" , http.StatusMethodNotAllowed)
-	}}
+		http.Error(w, "Method notallowed", http.StatusMethodNotAllowed)
+	}
+}
 
 func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -137,65 +141,65 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 		err = DB.InputUser(username, password, email, phoneNumber)
 		if err != nil {
 			if err.Error() == "User already exists" {
-    				 http.Error(w, "Username  already exists.Try using a different Username", http.StatusConflict)
-       			 return
-    			}
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-			return 
+				http.Error(w, "Username  already exists.Try using a different Username", http.StatusConflict)
+				return
 			}
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		// Need a way to validate that its a real email being passed.
-		status, err :=  Emails.SendEmail(username,email,Emails.GenericTemplate,Emails.GenerticHtmlTemplate)
-		fmt.Println(status,err)
-		if err != nil{
-			fmt.Println("error occured sending email, status err: ",status,err)}
+		status, err := Emails.SendEmail(username, email, Emails.GenericTemplate, Emails.GenerticHtmlTemplate)
+		fmt.Println(status, err)
+		if err != nil {
+			fmt.Println("error occured sending email, status err: ", status, err)
+		}
 		http.Redirect(w, r, "/SignupConfirmation", http.StatusSeeOther)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
 
-
-func SignupConfirmationHandler(w http.ResponseWriter , r *http.Request){
-	renderTemplate(w,"SignUpconfirmation.html",nil)
+func SignupConfirmationHandler(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, "SignUpconfirmation.html", nil)
 }
 
-func LogHandler(w http.ResponseWriter, r *http.Request){
-	data , err := DB.TopLogs()	
-	if err != nil{
-	fmt.Fprint(w,"Error had occured loading Logs")	
-	return 
+func LogHandler(w http.ResponseWriter, r *http.Request) {
+	data, err := DB.TopLogs()
+	if err != nil {
+		fmt.Fprint(w, "Error had occured loading Logs")
+		return
 	}
-	DataBytes  := []byte(data)
-	_ , err = w.Write(DataBytes)
-	if err != nil{
-	http.Error(w, "Error Occured",http.StatusInternalServerError)
+	DataBytes := []byte(data)
+	_, err = w.Write(DataBytes)
+	if err != nil {
+		http.Error(w, "Error Occured", http.StatusInternalServerError)
 	}
 }
 
-
-func InvalidCredentials(w http.ResponseWriter , r *http.Request){
-	renderTemplate(w,"InvalidCred.html",nil)
+func InvalidCredentials(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, "InvalidCred.html", nil)
 }
-	
-func TestHandler (w http.ResponseWriter , r *http.Request){
-	data , err := DB.AllActiveUsers()
-	if err != nil{
+
+func TestHandler(w http.ResponseWriter, r *http.Request) {
+	data, err := DB.AllActiveUsers()
+	if err != nil {
 		fmt.Println(err)
-		return }
+		return
+	}
 	fmt.Println(data)
-	fmt.Fprint(w,data)
+	fmt.Fprint(w, data)
 	return
 
 }
 
-func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) { // this is for static html page rendering. 
+func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) { // this is for static html page rendering.
 	staticDir := "static"
 	// Get the absolute path by joining the current working directory with the relative path
 	absStaticDir, err := filepath.Abs(staticDir)
-	if err != nil{
-	
+	if err != nil {
+
 	}
-	tmplPath := filepath.Join(absStaticDir,tmpl)
+	tmplPath := filepath.Join(absStaticDir, tmpl)
 	t, err := template.ParseFiles(tmplPath)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -207,4 +211,3 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) { // t
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
-
