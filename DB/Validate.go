@@ -5,6 +5,12 @@ import (
 	"encoding/hex"
 	"fmt"
 	"time"
+<<<<<<< HEAD
+=======
+	"encoding/json"
+    "crypto/sha256"
+    "encoding/hex"
+>>>>>>> Cookies
 )
 
 var seed = []byte("db746edd-40a4-4015-a1e3-1572c64ba865") // Define a fixed seed
@@ -41,3 +47,18 @@ func CleanDB() error {
 		time.Sleep(1 * time.Minute)
 	}
 }
+<<<<<<< HEAD
+=======
+func stringsToJSON(args ...string) (string, error) {
+    // Convert variadic input strings to a slice of strings
+    stringsSlice := []string(args)
+
+    // Marshal the slice into JSON format
+    jsonString, err := json.Marshal(stringsSlice)
+    if err != nil {
+        return "", err
+    }
+
+    return  string(jsonString) , err 
+}
+>>>>>>> Cookies

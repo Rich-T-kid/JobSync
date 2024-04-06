@@ -28,6 +28,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		Username := r.Form.Get("Username")
 		Password := r.Form.Get("Password")
+<<<<<<< HEAD
 		DBUserName, Response := DB.RealLogin(Username, Password)
 		if Response != nil {
 			http.Error(w, "You must login fisrt", http.StatusUnauthorized)
@@ -41,6 +42,29 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			http.SetCookie(w, cookie)
 			http.SetCookie(w, UserNameCookie)
+=======
+		_, Response := DB.RealLogin(Username,Password)
+		if Response  != nil  {
+				http.Error(w,"You must login fisrt", http.StatusUnauthorized)
+		}else{
+			Cookies , err := Sessions.GatherUserCookies(Username) //move both of these into the gatherUser cookies function. pass in username
+			if err != nil{
+				fmt.Fprint(w, err)
+				return }
+			cookie := Sessions.CreateSessionCookie(Username)
+			Temp := DB.User{ Name: Username, Password: Password,SessID :  cookie.Value,}
+			DB.UserSlice = append(DB.UserSlice , Temp)
+			if err := DB.StoreCookie(cookie,Username); err != nil{
+				//this is only for the storagee cookie. other cookies already stored in database
+				fmt.Fprintln(w,err)	
+			}
+			Cookies = append(Cookies , cookie)
+			for _ , cookie  := range Cookies{
+				fmt.Println(cookie.Name ," cookie values  : " , cookie.Value)
+				http.SetCookie(w,cookie)
+			}
+			http.SetCookie(w,cookie) // if done well wont need to do this by hand 
+>>>>>>> Cookies
 			http.Redirect(w, r, "/homepage", http.StatusSeeOther)
 			return
 		}
@@ -56,13 +80,21 @@ func LogOutHandler(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, "LogOut.html", nil)
 
 	case "POST":
+<<<<<<< HEAD
 		SessionCookie, err := r.Cookie("SessionID")
 		if err != nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
+=======
+		SessionCookie , err := r.Cookie("SessionID")
+
+		if err != nil{
+		http.Redirect(w,r,"/",http.StatusSeeOther)		
+>>>>>>> Cookies
 		}
 		SessionCookie.Expires = time.Now().AddDate(0, 0, -1)
 		http.SetCookie(w, SessionCookie)
 		DB.RemoveUserSessionSlice(SessionCookie.Value)
+		// need to remove all the cookies but mbaey it wont matter actaully
 		// remove the session from the database
 		DB.DeleteCookieSession(SessionCookie)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
