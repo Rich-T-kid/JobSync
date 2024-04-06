@@ -9,7 +9,6 @@ var UserSlice []User
 type User struct {
 	Name     string
 	Password interface{}
-<<<<<<< HEAD
 	SessID   string
 	/*Email string
 	PhoneNumber string
@@ -22,7 +21,6 @@ type UserDB struct {
 	password string
 	email    string
 	phone    string
-=======
 	SessID  string
 }
 
@@ -35,8 +33,6 @@ Username string
 password string
 email string
 phone string
-
->>>>>>> Cookies
 }
 
 // UserCookieSession represents the user_cookie_sessions table.
