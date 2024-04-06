@@ -2,20 +2,15 @@ package DB
 
 import (
 	"database/sql"
-<<<<<<< HEAD
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	env "proj/env"
-	"sync"
-=======
 	"strconv"
-	"fmt"
 	"log"
 	"sync"
 	"os"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
->>>>>>> ChatApp
 )
 
 var (
@@ -24,21 +19,7 @@ var (
 )
 
 func createDBConnection() (*sql.DB, error) {
-<<<<<<< HEAD
-	// MySQL connection details
-	host := "127.0.0.1" // Docker container host
-	port := 3305        // Docker container port
-	username := "root"
-	password := "richard"
-	databaseName := "jobsync"
-
-	// Create the data source name (DSN)
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", username, password, host, port, databaseName)
-
-	// Open a connection to the MySQL server
-	db, err := sql.Open("mysql", dsn)
-	if err != nil {
-=======
+		// Open a connection to the MySQL server
     // MySQL connection details
     host := os.Getenv("host")
     port := os.Getenv("port")
@@ -48,11 +29,6 @@ func createDBConnection() (*sql.DB, error) {
     // Create the data source name (DSN)
     port1 , _ := stringToNumber(port) 
     dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", username, password, host, port1, databaseName)
-
-
-
-
-    fmt.Println("current sql connection string", dsn)
     // Open a connection to the MySQL server
     db, err := sql.Open("mysql", dsn)
     if err != nil {
@@ -68,12 +44,11 @@ func createDBConnection() (*sql.DB, error) {
     return db, nil
 }
 func DBConnection() (*sql.DB,error)  {
-	if db == nil{
-	connection , err := createDBConnection()
+	if db == nil {
+	connection , err := createDBConnection()}
 	if err != nil{
 		fmt.Println("Richard Doubel check that the Dokcer container running the DB instance is running")
 		fmt.Println("error in creating DB instance", err)
->>>>>>> ChatApp
 		return nil, err
 	}
 
@@ -85,22 +60,8 @@ func DBConnection() (*sql.DB,error)  {
 
 	return db, nil
 }
-<<<<<<< HEAD
-func DBConnection() (*sql.DB, error) {
-	if db == nil {
-		connection, err := createDBConnection()
-		if err != nil {
-			fmt.Println("Richard Doubel check that the Dokcer container running the DB instance is running")
-			fmt.Println("error in creating DB instance", err)
-			return nil, err
-		}
-		db = connection
-	}
-	return db, nil
 
-}
-func StartConnection() {
-=======
+
 func loadEnviromentVars(){
 	log.Println("loading enviroment varibaleS")
 	godotenv.Load()
@@ -119,7 +80,6 @@ func stringToNumber(input string) (int, error) {
 
 func StartConnection(){
 	loadEnviromentVars()
->>>>>>> ChatApp
 	DBConnection()
 	go CleanDB()
 	awsConnection()
