@@ -3,6 +3,7 @@ package Routing
 import (
 	"github.com/gorilla/mux"
 	//"fmt"
+	"proj/ChatServer"	
 	"proj/Handlers"
 )
 
@@ -12,6 +13,7 @@ var (
 	localconnections *mux.Router = localConnectionsSubrouter(Router)
 	chill            *mux.Router = chillSubrouter(Router)
 	jobs             *mux.Router = jobsSubrouter(Router)
+	api        *mux.Router = apiRouter(Router)
 )
 
 // this will be the whole application
@@ -50,11 +52,17 @@ func SetUpLocalConnections() {
 // Prefix /chill
 func SetUpChill() {
 	chill.HandleFunc("", Handlers.ChillHome)
+	chill.HandleFunc("/wsConnection", ChatServer.WebSocketConnection)
 }
 
 // Prefix /jobs
 func SetUpJobs() {
 	jobs.HandleFunc("", Handlers.JobsHomePage)
+}
+// Prefix /Api
+func SetUpAPIRouter(){
+	api.HandleFunc("/UploadFile",Handlers.FileUpload).Methods("GET","POST")
+
 }
 
 // Start main router and subrouters

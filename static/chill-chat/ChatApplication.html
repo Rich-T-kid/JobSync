@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        /* Reset CSS */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center; /* Center align text */
+            position: relative;
+            z-index: 1; /* Ensure header is above other content */
+        }
+
+        header h1 {
+            margin: 0 auto; /* Center the text horizontally */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Global Styles */
+        body {
+            background-color: #171c24; /* Dark background */
+            font-family: Arial, sans-serif;
+            color: #fff; /* White text color */
+            overflow-y: auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .top-bar {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .top-bar a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            margin-right: 20px;
+        }
+
+        .top-bar a:hover {
+            color: #ffd700;
+        }
+
+        .chat-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 150px;
+            border-left: 1px solid #ccc; /* Add this line */
+        }
+
+        .chat-box {
+            display: flex;
+            width: 50%;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 20px auto; /* Adjust the top and bottom margin as needed */
+        }
+
+        .users-pane {
+            width: 30%;
+            border-right: 1px solid #ccc;
+        }
+
+        .chat-pane {
+            flex: 1;
+            padding: 10px;
+            position: relative;
+        }
+
+        .message-container {
+            height: 500px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+            padding: 10px;
+        }
+
+        input[type="text"] {
+            width: calc(70% - 10px);
+            margin-right: 5px;
+            height: 30px;
+        }
+
+        button.send-btn {
+            background-color: #ffd700;
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button.upload-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            top: 0;
+            right: 100%;
+            margin-right: 5px;
+        }
+        .message-user,
+        .message-others {
+            display: block; /* Set display to block */
+            max-width: 70%; /* Limit the maximum width of the bubbles */
+            margin-bottom: 5px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            word-wrap: break-word; /* Wrap long words */
+        }
+
+        .message-user {
+            background-color: #007AFF; /* Blue for user messages */
+            color: white;
+            /* Remove align-self property */
+        }
+
+        .message-others {
+            background-color: #E4F9F1; /* Grayish-green for others messages */
+            color: black;
+            /* Remove align-self property */
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            const realUsernameElement = document.getElementById('RealUsername');
+            // Retrieve the text content of the element
+            const username = realUsernameElement.textContent.trim();
+
+            var conn;
+            var msg = document.getElementById("msg");
+            var log = document.getElementById("chat-messages");
+    
+            function appendLog(item, isUser) {
+                //console.log("ataully message: ". item.msg)
+                var doScroll = log.scrollTop > log.scrollHeight - log.clientHeight - 1;
+                // Apply appropriate CSS class based on whether the message is from the user or others
+                console.log("item" , item, "isuser: ", isUser)
+                if (isUser) {
+                    item.classList.add("message-user");
+                } else {
+                    item.classList.add("message-others");
+                }
+                log.appendChild(item);
+                if (doScroll) {
+                    log.scrollTop = log.scrollHeight - log.clientHeight;
+                }
+            }
+            document.getElementById("UploadFileButton").onclick = function (){
+                window.alert("richard still has to implement s3 bucket image  upload")
+            };
+            document.getElementById("SendTextMSG").onclick = function () {
+                if (!conn) {
+                    return false;
+                }
+                if (!msg.value) {
+                    return false;
+                }
+                conn.send(msg.value);
+                msg.value = "";
+                return false;
+            };
+    
+            if (window["WebSocket"]) {
+                conn = new WebSocket("ws://localhost:8080/chill/wsConnection"); // Updated WebSocket URL
+                conn.onmessage = function (evt) {
+                // Remove sender info from the message
+                const clientInfoRemoved = removeSenderInfo(evt.data);
+                
+                // Create message item element
+                var item = document.createElement("div");
+
+                // Check if the message is a URL
+                if (isValidURL(clientInfoRemoved)) {
+                    // If it's a URL, create an image element for preview
+                    const imagePreview = document.createElement("img");
+                    imagePreview.src = clientInfoRemoved;
+                    imagePreview.classList.add("image-preview");
+                    imagePreview.style.maxWidth = "250px";
+                    imagePreview.style.maxHeight = "400px";
+                    item.appendChild(imagePreview);
+                } else {
+                    // If it's not a URL, display the message as text
+                    item.innerText = clientInfoRemoved;
+                }
+                
+                // Check if the message is sent by the current user
+                if (username === getFirstWord(evt.data)) {
+                    appendLog(item, true); // If it's the user's own message
+                } else {
+                    appendLog(item, false); // If it's from other users
+                }
+        };
+
+            } else {
+                var item = document.createElement("div");
+                item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
+                appendLog(item, false); // Use false for others messages
+            }
+
+
+            function getFirstWord(inputString) {
+                // Split the input string into an array of words
+                let words = inputString.trim().split(' ');
+                
+                // Return the first word (element at index 0)
+                return words[0];
+            }
+            function removeSenderInfo(inputString) {
+                // Find the index of the first occurrence of ":" in the input string
+                const colonIndex = inputString.indexOf(':');
+                
+                // Check if ":" exists in the input string
+                if (colonIndex !== -1) {
+                    // Return the substring after ":" with leading and trailing whitespace removed
+                    return inputString.slice(colonIndex + 2).trim();
+                } else {
+                    // If ":" is not found, return the input string as is
+                    return inputString;
+                }
+            }
+            function isValidURL(str) {
+                const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+                    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+                return !!pattern.test(str);
+            }
+
+        
+        };
+    </script>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="/homepage">Home</a>
+        <a href="/chill">Chill</a>
+        <a href="/jobs">Jobs</a>
+    </div>
+
+    <div class="centerheader-h1 ">
+        <h1>JobSync</h1>
+        <!-- Other elements in the top bar -->
+    </div>
+    <div  id="RealUsername" class="user-placeholder">{{.Username}}</div>
+
+    <div class="chat-container">
+        <div class="chat-box">
+            <div class="users-pane">
+                <h3>Possible Connections</h3>
+                <ul>
+                    <!-- Populate this list dynamically -->
+                    {{.UserFriends}}
+                </ul>
+                <button class="upload-btn">Upload Image</button>
+            </div>
+            <div class="chat-pane">
+                <h2>Chat</h2>
+                <div class="message-container" id="chat-messages"></div>
+                <input type="text" placeholder="Type your message..." id="msg">
+                <!-- Add an ID to the button for easier access -->
+                <button id="SendTextMSG" class="send-btn">Send</button>
+                <button id="UploadFileButton" class="send-btn">Upload File</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+                
+                
+                
+                
+                
+                
+                

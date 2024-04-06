@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+<<<<<<< HEAD
 	"proj/Autho"
 	"proj/DB"
 	"proj/MiddleWare"
@@ -10,6 +11,11 @@ import (
 =======
 	"net/http"
 >>>>>>> Cookies
+=======
+	"os"
+	"proj/DB"
+	"proj/MiddleWare"
+>>>>>>> ChatApp
 	"proj/Routing"
 )
 
@@ -33,10 +39,16 @@ func init() {
 
 func main() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	UniversalLogger.Info.Output("running server on local host 8080")
 =======
 	fmt.Println("running server on local host 8080")
 >>>>>>> Cookies
+=======
+	value := os.Getenv("EmailAPIKey")
+	fmt.Println("email api  =" , value)
+	fmt.Println("running server on local host 8080")
+>>>>>>> ChatApp
 	log.Fatal(http.ListenAndServe(":8080", chain))
 
 }
