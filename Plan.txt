@@ -1,58 +1,6 @@
-
-Implement a way for users to connect to one another and become friends (Can be called what ever) this is how well establish the message connections as well as on the chat subpath with showcase all possible
-friend that you can messages
-
-
-Implement checking if username and ahshed password exist in users Table
-		Then use this method in the Login Handler
-		Should be using a real Authenticated Login this week along with dummy login for each of us which will 1 username and 1 password
-
-
-	Will probly need other cookie like / UserPrefences , Autheentification (What persmission Users Have) ,UserLocation ,later On Implement "Remember Me" button so no need fo rrepeated login
-	Later () == >>  //Build out all the schemes well need for the chat application side of Things.
-
-	Buid the basics of just the endpoints and what theyll display 
-	in Golang code focus on how were going to Get Jobs board info as well as how well display this to the user.
-
-by wendnesday night deploy to anywhere just to see.
-
-Account Settings:
-
-Username
-Password
-Email address
-Profile picture
-Biography or About Me section
-Privacy Settings:
-
-Public profile visibility
-Who can send friend requests or follow requests
-Who can view posts, photos, or other content
-Who can send messages or chat requests
-Notification Settings:
-
-Email notifications (e.g., new messages, friend requests, comments)
-Push notifications (e.g., mobile app notifications for new activity)
-Frequency of notifications (e.g., instant, daily summary)
-Appearance Settings:
-
-Theme selection (e.g., light mode, dark mode)
-Font size
-Color scheme customization
-Background image or wallpaper
-Language and Region Settings:
-
-
-Content Preferences:
-
-Filter settings for content (e.g., age restrictions, content warnings)
-Notification Preferences:
-
-Preference for receiving promotional emails
-Opt-in or opt-out of marketing communications
-Data and Privacy:
-
-Data export or download options
-Data deletion or account closure requests
-Privacy policy and terms of service review
-https://www.kelche.co/blog/go/golang-environment-variables/#:~:text=To%20get%20an%20environment%20variable,will%20return%20an%20empty%20string.
+- Fix all println statements throughout the program
+- Implement real authentication Middleware
+- Docker Compose setup
+- Test JSON Marshalling/Demarshalling bug
+- Resolve Settings page bug
+- Integrate AWS S3 buckets for storing user profile pictures and loading images in chat documentation
