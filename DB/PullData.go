@@ -40,18 +40,10 @@ func InputUser(Username, password, Email string, Phone_number interface{}) error
 	password = hashPassword(password)
 	formatedQuery := fmt.Sprintf("insert into users(Username,password,Email,Phone_number) values (\"%s\",\"%s\",\"%s\",\"%s\")", Username, password, Email, Phone_number)
 	_, er := db.Exec(formatedQuery)
-<<<<<<< HEAD
 	return er
 }
 func GenerateHashfake(password string) string {
 	return password
-=======
-	err = inputUserInDB(Username)
-	if err != nil{
-		fmt.Println(err)
-		return err}
-	return  er
->>>>>>> Cookies
 }
 
 func RealLogin(username, password string) (string, error) {
@@ -83,160 +75,169 @@ func ValidLogin(username string, password string) bool {
 	return true
 }
 
-func inputUserInDB(Username string)error {
-	  stmt0, err := db.Prepare("INSERT INTO privacy_settings (user_id) VALUES (?)")
-    if err != nil {
-        fmt.Println("Error preparing SQL statement:InputUserINDB", err)
-        return err
-    }
-    defer stmt0.Close()
+func inputUserInDB(Username string) error {
+	stmt0, err := db.Prepare("INSERT INTO privacy_settings (user_id) VALUES (?)")
+	if err != nil {
+		fmt.Println("Error preparing SQL statement:InputUserINDB", err)
+		return err
+	}
+	defer stmt0.Close()
 
 	stmt1, err := db.Prepare("INSERT INTO permission_table (user_id, permission) VALUES (? , ?) ")
-    if err != nil {
-        fmt.Println("Error preparing SQL statement:", err)
-        return err
-    }
-    defer stmt1.Close()
-    
-stmt2, err := db.Prepare("INSERT INTO notification_settings (user_id) VALUES (?)")
-    if err != nil {
-        fmt.Println("Error preparing SQL statement:", err)
-        return err
-    }
-    defer stmt2.Close()
+	if err != nil {
+		fmt.Println("Error preparing SQL statement:", err)
+		return err
+	}
+	defer stmt1.Close()
 
-stmt3, err := db.Prepare("INSERT INTO appearance_settings (user_id, content_filters) VALUES (?, ?) ")
-    if err != nil {
-        fmt.Println("Error preparing SQL statement:", err)
-        return err
-    }
-    defer stmt3.Close()
+	stmt2, err := db.Prepare("INSERT INTO notification_settings (user_id) VALUES (?)")
+	if err != nil {
+		fmt.Println("Error preparing SQL statement:", err)
+		return err
+	}
+	defer stmt2.Close()
 
-    // Define the user ID value
-    yourUserID := idFromUserName(Username) // Replace with the actual user ID
+	stmt3, err := db.Prepare("INSERT INTO appearance_settings (user_id, content_filters) VALUES (?, ?) ")
+	if err != nil {
+		fmt.Println("Error preparing SQL statement:", err)
+		return err
+	}
+	defer stmt3.Close()
 
-    // Execute the SQL statement with the user ID
-    _, err = stmt0.Exec(yourUserID)
+	// Define the user ID value
+	yourUserID := idFromUserName(Username) // Replace with the actual user ID
 
-   if err != nil{fmt.Println(err)} 
-   defaultPermissionsStr , err := stringsToJSON("Read","Write")
-   if err != nil{fmt.Println(err)}
-   fmt.Println("jsonnnn string" , defaultPermissionsStr)
-    _, err = stmt1.Exec(yourUserID, defaultPermissionsStr)
+	// Execute the SQL statement with the user ID
+	_, err = stmt0.Exec(yourUserID)
 
-    fmt.Println("error from perimson insertion: , ", err)
-   if err != nil{fmt.Println(err)} 
-    _, err = stmt2.Exec(yourUserID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defaultPermissionsStr, err := stringsToJSON("Read", "Write")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("jsonnnn string", defaultPermissionsStr)
+	_, err = stmt1.Exec(yourUserID, defaultPermissionsStr)
 
-   if err != nil{fmt.Println(err)} 
-   defualtFilters := `["Explicit"]`
-    _, err = stmt3.Exec(yourUserID,defualtFilters)
-    
-   if err != nil{fmt.Println(err)} 
-   return nil
+	fmt.Println("error from perimson insertion: , ", err)
+	if err != nil {
+		fmt.Println(err)
+	}
+	_, err = stmt2.Exec(yourUserID)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	defualtFilters := `["Explicit"]`
+	_, err = stmt3.Exec(yourUserID, defualtFilters)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return nil
 }
-
 
 /*
 just for security reasons, overight all of the UserID return values from
-Scanning. Set it all to -1 as this cannot exist in the databse 
+Scanning. Set it all to -1 as this cannot exist in the databse
 
 */
 
-func (p PrivacySettings) DbtoStruct(username string ) (interface{} ,error)  {
+func (p PrivacySettings) DbtoStruct(username string) (interface{}, error) {
 	var pSetting PrivacySettings
 
 	fmt.Println("privacy settings  before ; ", pSetting)
 	userid := idFromUserName(username)
 	query := "select * from privacy_settings where user_id = ?"
-	row , err := db.Query(query,userid)
-	if err != nil{
-	return nil , err
+	row, err := db.Query(query, userid)
+	if err != nil {
+		return nil, err
 	}
 
 	var date string
-	for row.Next(){
-	err := row.Scan(&pSetting.userID , &pSetting.UsernameVisibility , &pSetting.FriendRequestsVisibility , &pSetting.ContentVisibility,&date)
-	if err != nil{
-		return nil , err}
+	for row.Next() {
+		err := row.Scan(&pSetting.UserID, &pSetting.UsernameVisibility, &pSetting.FriendRequestsVisibility, &pSetting.ContentVisibility, &date)
+		if err != nil {
+			return nil, err
+		}
 	}
-	validTime , err := parseTimeString(date)
+	validTime, err := parseTimeString(date)
 	PP := &pSetting
-	PP.userID = -1
+	PP.UserID = -1
 	PP.LastUpdated = validTime
-	return &pSetting , nil
+	return &pSetting, nil
 }
 
-
-func (a AppearanceSettings) DbtoStruct(username string) (interface{} , error) {
-	var pAppearanceSettings  AppearanceSettings
+func (a AppearanceSettings) DbtoStruct(username string) (interface{}, error) {
+	var pAppearanceSettings AppearanceSettings
 	userid := idFromUserName(username)
 	query := "select * from appearance_settings where user_id = ?"
-	row , err := db.Query(query , userid)
-	if err != nil{
-		return nil , err
+	row, err := db.Query(query, userid)
+	if err != nil {
+		return nil, err
 	}
-	for row.Next(){
+	for row.Next() {
 		// Todo fill in the fields
 		err := row.Scan(
-    &pAppearanceSettings.userID,
-    &pAppearanceSettings.Theme,
-    &pAppearanceSettings.FontSize,
-    &pAppearanceSettings.ColorScheme,
-    &pAppearanceSettings.BackgroundImage,
-    &pAppearanceSettings.Language,
-    &pAppearanceSettings.ContentFilters,
-)
-	if err != nil{
-		return nil , err }
+			&pAppearanceSettings.UserID,
+			&pAppearanceSettings.Theme,
+			&pAppearanceSettings.FontSize,
+			&pAppearanceSettings.ColorScheme,
+			&pAppearanceSettings.BackgroundImage,
+			&pAppearanceSettings.Language,
+			&pAppearanceSettings.ContentFilters,
+		)
+		if err != nil {
+			return nil, err
+		}
 
 	}
 
 	PP := &pAppearanceSettings
-	PP.userID = -1
-	return &pAppearanceSettings , nil
+	PP.UserID = -1
+	return &pAppearanceSettings, nil
 }
 
-func (n NotificationSettings) DbtoStruct(username string)(interface{} , error)  {
+func (n NotificationSettings) DbtoStruct(username string) (interface{}, error) {
 	var pNotificationSettings NotificationSettings
 
 	userid := idFromUserName(username)
 	query := "select * from notification_settings where user_id = ?"
-	row , err := db.Query(query,userid)
-	if err != nil{
-		return nil , err
+	row, err := db.Query(query, userid)
+	if err != nil {
+		return nil, err
 	}
-	for row.Next(){
+	for row.Next() {
 
-	err := row.Scan(&pNotificationSettings.userID, &pNotificationSettings.EmailNotifications ,&pNotificationSettings.PushNotifications ,&pNotificationSettings.NotificationFrequency )
-	if err != nil{
-		return nil , err}
+		err := row.Scan(&pNotificationSettings.UserID, &pNotificationSettings.EmailNotifications, &pNotificationSettings.PushNotifications, &pNotificationSettings.NotificationFrequency)
+		if err != nil {
+			return nil, err
+		}
 	}
 	PP := &pNotificationSettings
-	PP.userID = -1
-	return &pNotificationSettings , nil
+	PP.UserID = -1
+	return &pNotificationSettings, nil
 }
 
-
-func (p Permissions) DbtoStruct(username string) (interface{} , error) {
+func (p Permissions) DbtoStruct(username string) (interface{}, error) {
 	var pPermissions Permissions
 	userid := idFromUserName(username)
 	query := "select * from permission_table where user_id = ?"
-	row , err := db.Query(query , userid)
-	if err != nil{
-		return nil ,err}
-	var date string
-	for row.Next(){
-		err := row.Scan(&pPermissions.userID,&pPermissions.ID,&pPermissions.Permissions,&date)
-		if err != nil{
-			return nil , err}
+	row, err := db.Query(query, userid)
+	if err != nil {
+		return nil, err
 	}
-	ValidDate , err := parseTimeString(date) 
+	var date string
+	for row.Next() {
+		err := row.Scan(&pPermissions.userID, &pPermissions.ID, &pPermissions.Permissions, &date)
+		if err != nil {
+			return nil, err
+		}
+	}
+	ValidDate, err := parseTimeString(date)
 	PP := &pPermissions
 	PP.userID = -1
 	PP.LastUpdated = ValidDate
-	return &pPermissions , nil
-} 
-
-
-
+	return &pPermissions, nil
+}
