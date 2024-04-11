@@ -11,3 +11,7 @@ Info 2024/04/03 16:40:52 main.go:26: running server on local host 8080
   < ServerStart >2024-04-03 16:55:56 <--------------> 
 Info 2024/04/03 16:55:56 main.go:21: Started Routers
 Info 2024/04/03 16:55:56 main.go:22: Set up Database connection
+
+  < ServerStart >2024-04-07 21:49:32 <--------------> 
+Info 2024/04/07 21:49:32 main.go:21: Started Routers
+Info 2024/04/07 21:49:32 main.go:22: Set up Database connection
