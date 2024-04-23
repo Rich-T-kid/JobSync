@@ -46,6 +46,22 @@ func GenerateHashfake(password string) string {
 	return password
 }
 
+
+
+// Implement method that takes in a chatroom id and returns all the messages sent in that chat rooms since its inceptions. (augment later to have option data paremeter that will indicate latest message to pull)
+
+
+
+// This needs to be loaded into json format and the pulled to an endpoint that the front end can call with proper authorization
+
+
+
+
+
+
+
+
+
 func RealLogin(username, password string) (string, error) {
 	db, err := DBConnection()
 	if err != nil {

@@ -1,6 +1,5 @@
 - Fix all println statements throughout the program
 - Implement real authentication Middleware
 - Docker Compose setup
-- Test JSON Marshalling/Demarshalling bug
-- Resolve Settings page bug
 - Integrate AWS S3 buckets for storing user profile pictures and loading images in chat documentation
+

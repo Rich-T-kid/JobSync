@@ -134,12 +134,7 @@ func AllActiveUsers() ([]string, error) {
 
 // this says store but it more of an update function.since in db certain values are set by defualt. this willa ct as an update. Pass in cookie
 // and the database will be updated to match the cookies values and return an error.
-func StoreProfileSettings() {}
 
-func StoreNotificationSettings() {}
-
-func StoreContentPrefences() {}
-
-func StoreappeanceSettings() {}
-
-func StoreprivacySettings() {}
+//Define method to store each users message into the Database
+// General logic will be. func (c *ChatRoom) addMessage (username, message) { Insert message from username into chatRoomID in mysql tabel
+// make sure in the handler function that the message is only being sent to the Database once and not serveral times due to the websocket connection 

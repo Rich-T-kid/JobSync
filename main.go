@@ -2,10 +2,10 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"proj/Autho"
 	"proj/DB"
 	"proj/MiddleWare"
-	"net/http"
 	"proj/Routing"
 )
 
@@ -20,11 +20,11 @@ func init() {
 	defer UniversalLogger.CleanUp()
 	UniversalLogger.Info.Output("Started Routers")
 	UniversalLogger.Info.Output("Set up Database connection")
-	DB.StartConnection()	
+	DB.StartConnection()
 }
 
 func main() {
-UniversalLogger.Info.Output("running server on local host 8080")
+	UniversalLogger.Info.Output("running server on local host 8080")
 	log.Fatal(http.ListenAndServe(":8080", chain))
 
 }

@@ -2,9 +2,15 @@ package DB
 
 import (
 	"time"
+	"github.com/aws/aws-sdk-go/service/s3"
 )
 
 var UserSlice []User
+type msgUploader struct{
+	parentBucketName string
+	bucketName string // this should be a joint of both users names. Like john-jake
+	s3Bucket *s3.S3
+}
 
 type User struct {
 	Name     string
@@ -89,3 +95,12 @@ type UserPermsions struct {
 	Userid      int
 	Permissions []string
 }
+// make aws conenction flexable. Currently only need s3 buckets so encapsulated that in a struct but encapuslating that within a genral aws struct in case for future expansion. Also allows for different use cases of buckets
+type AwsConnection struct{
+	ImageStorageBucket storageBucket // later this should be a pointer to s3 bucket struct that handles all that lgoic
+
+}
+type storageBucket struct{
+	name string
+}
+

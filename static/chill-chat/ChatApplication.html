@@ -166,9 +166,37 @@
                     log.scrollTop = log.scrollHeight - log.clientHeight;
                 }
             }
-            document.getElementById("UploadFileButton").onclick = function (){
-                window.alert("richard still has to implement s3 bucket image  upload")
-            };
+            //document.getElementById("UploadFileButton").onclick = function (){
+              //  window.alert("richard still has to implement s3 bucket image  upload")
+            //};
+            document.getElementById("UploadFileButton").onclick = function () {
+            // Trigger click event of the file input element
+            document.getElementById("fileInput").click();
+        };
+
+        // Handle file selection
+        document.getElementById("fileInput").onchange = function () {
+            var file = this.files[0]; // Get the selected file
+            if (file) {
+                // Send a GET request to the server
+                fetch("http://localhost:8080/api/test")
+                    .then(response => {
+                        console.log(response);
+                        if (response.ok) {
+                            // GET request successful
+                            console.log("GET request successful");
+                        } else {
+                            // GET request returned an error status code
+                            console.error("GET request returned an error");
+                        }
+                    })
+                    .catch(error => {
+                        // Error occurred during the GET request
+                        console.error("Error:", error);
+                    });
+            }
+        };
+
             document.getElementById("SendTextMSG").onclick = function () {
                 if (!conn) {
                     return false;
@@ -272,6 +300,7 @@
                 <h3>Possible Connections</h3>
                 <ul>
                     <!-- Populate this list dynamically -->
+
                     {{.UserFriends}}
                 </ul>
                 <button class="upload-btn">Upload Image</button>
@@ -282,7 +311,9 @@
                 <input type="text" placeholder="Type your message..." id="msg">
                 <!-- Add an ID to the button for easier access -->
                 <button id="SendTextMSG" class="send-btn">Send</button>
-                <button id="UploadFileButton" class="send-btn">Upload File</button>
+                <!--<button id="UploadFileButton" class="send-btn">Upload File</button-->
+                <input type="file" id="fileInput" style="display: none;">
+                <button id="UploadFileButton">Upload File</button>
             </div>
         </div>
     </div>

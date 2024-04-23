@@ -3,7 +3,7 @@ package Routing
 import (
 	"github.com/gorilla/mux"
 	//"fmt"
-	"proj/ChatServer"	
+	"proj/ChatServer"
 	"proj/Handlers"
 )
 
@@ -13,7 +13,7 @@ var (
 	localconnections *mux.Router = localConnectionsSubrouter(Router)
 	chill            *mux.Router = chillSubrouter(Router)
 	jobs             *mux.Router = jobsSubrouter(Router)
-	api        *mux.Router = apiRouter(Router)
+	api              *mux.Router = apiRouter(Router)
 )
 
 // this will be the whole application
@@ -59,16 +59,27 @@ func SetUpChill() {
 func SetUpJobs() {
 	jobs.HandleFunc("", Handlers.JobsHomePage)
 }
-// Prefix /Api
-func SetUpAPIRouter(){
-	api.HandleFunc("/UploadFile",Handlers.FileUpload).Methods("GET","POST")
 
+// Important note.Need to create middleware that applies to all of api endpoitns since they will be used cross functioanlly.
+/*
+w.Header().Set("Access-Control-Allow-Origin", "*")
+            w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+            w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+    needs to be set on each api request
+*/
+// Prefix /api
+func SetUpAPIRouter() {
+	api.HandleFunc("", Handlers.ApiHomepage)
+	api.HandleFunc("/uploadFileAWS", Handlers.FileUpload).Methods("GET", "POST")
+	api.HandleFunc("/test", Handlers.Uploadtest)
 }
 
 // Start main router and subrouters
 func StartAllRouters() *mux.Router {
 	mainRouter := SetUpRouter()
 	SetUpSettings()
+	SetUpAPIRouter()
 	SetUpJobs()
 	SetUpChill()
 	SetUpRouter()
